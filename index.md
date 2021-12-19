@@ -5,9 +5,6 @@
 ### Work
 
 - BBC - Software Architect in broadcast video realm (2018 - now)
-
-### Previously
-
 - BBC - Software Developer (2010 - 2018)
 - BBC - Video Editor (2001 - 2010)
 - Various - Software Developer (1997 - 2001)
