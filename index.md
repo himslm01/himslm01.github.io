@@ -1,4 +1,4 @@
-# Mark Himsley's GitHub pages
+# Notes and Thoughts
 
 ## Summary
 
