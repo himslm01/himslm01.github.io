@@ -79,12 +79,12 @@ Here's an example override.yaml
         mkdir -p /etc/rancher/k3s
         cat <<EOF >/etc/rancher/k3s/registries.yaml
         mirrors:
-            docker.io:
+          docker.io:
             endpoint:
-                - "http://nexus.lan:8084"
-            nexus.lan:
+              - "http://nexus.lan:8084"
+          nexus.lan:
             endpoint:
-                - "http://nexus.lan:8084"
+              - "http://nexus.lan:8084"
         EOF
         mkdir -p /etc/docker
         cat <<EOF >/etc/docker/daemon.json
