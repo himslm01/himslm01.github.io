@@ -10,9 +10,12 @@ I have also installed on GNU Linux Ubuntu 20.04 desktop, by adding their repo - 
 
 ### Running
 
-Run the `Rancher Desktop` application from the "Start" or "Applications" menus / Dock, and you will see the `Rancher Desktop` application and a friendly horned computer logo in the notification area.
+Run the `Rancher Desktop` application from the "Start" or "Applications" menus / Dock, and you will see the `Rancher Desktop` application and a friendly horned computer logo in the notification area <img src="../../assets/images/kubernetes/rancher_desktop/RancherDesktopIcon.png" alt="Rancher Desktop - Icon"/>.
 
 You can select how much RAM and how many CPU cores to assign to the virtual machine, and you can pick which version of Kubernetes to install.
+
+<img src="../../assets/images/kubernetes/rancher_desktop/RancherDesktopGUI01.png" alt="Rancher Desktop - Kubernetes settings" width="400"/>
+<img src="../../assets/images/kubernetes/rancher_desktop/RancherDesktopGUI02.png" alt="Rancher Desktop - Kubernetes settings - versions" width="400"/>
 
 At this point you have a single node kubernetes cluster called rancher-desktop running on your local machine. You can interact with it with the standard kubernetes tools, including `kubectl`, `helm` - which `Rancher Desktop` kindly installed for you:
 
@@ -21,6 +24,8 @@ At this point you have a single node kubernetes cluster called rancher-desktop r
     lima-rancher-desktop   Ready    builder,control-plane,master   35m   v1.21.5+k3s2
 
 ... and also other tools like Lens [https://k8slens.dev/](https://k8slens.dev/).
+
+<img src="../../assets/images/kubernetes/rancher_desktop/LensGUI01.png" alt="Rancher Desktop - Kubernetes settings - versions" width="600"/>
 
 ## Work in Progress
 
@@ -43,6 +48,8 @@ Because of that issue, `Rancher Desktop` can now be switched to use `dockerd` as
 ### Configuring the Rancher Desktop container runtime to pull images from private repositories is difficult.
 
 I am sure you are all aware of the need to edit `dockerd`'s daemon.json file to include `insecure-registries` and `registry-mirrors`. In `Docker Desktop` you can edit that in the GUI (here's an image from the Internet).
+
+<img src="https://i.stack.imgur.com/0ysoZ.png" alt="Docker Desktop - Daemon Advanced settings" width="250"/>
 
 In `Rancher Desktop`'s GUI you cannot currently edit that file (or the similar file that has edited when you are using `containerd` as the container runtime). But there is a workaround.
 
