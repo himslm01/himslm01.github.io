@@ -39,7 +39,7 @@ But I believe `Rancher Desktop` is already capable of replacing `Docker Desktop`
 
 `Rancher Desktop` was originally developed to use `containerd` as its container runtime. The documentation of workarounds is mostly for `containerd`. But there are issues when building container images using `containerd` and it's command line tool `nerdctl`.
 
-You are supposed to be able to substitute `nerdctl` for `docker` (or create an alias) - the CLI commands are supposed to be identical, but there are a few issues. The most notable issues using `nerdctl` are building images `FROM` local images and `COPY`ing using `--copy-from` a local image. These commands  do not work. [https://github.com/containerd/nerdctl/issues/434](https://github.com/containerd/nerdctl/issues/434)
+You are supposed to be able to substitute `nerdctl` for `docker` (or create an alias) - the CLI commands are supposed to be identical, but there are a few issues. The most notable issues using `nerdctl` are building images `FROM` local images and copying using `COPY --from` a local image. These commands  do not work. [https://github.com/containerd/nerdctl/issues/434](https://github.com/containerd/nerdctl/issues/434)
 
 Because of that issue, `Rancher Desktop` can now be switched to use `dockerd` as the container runtime (okay - it's actually `containerd` underneath `dockerd`, but `dockerd` is in control). This means you can use the `docker` command line tool (which also comes bundled with `Rancher Desktop`) and building images works as expected.
 
