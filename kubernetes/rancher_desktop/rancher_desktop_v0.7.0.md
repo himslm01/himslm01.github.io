@@ -2,9 +2,9 @@
 
 ## Mac, Windows, and Linux
 
-As of mid-December 2021 with the release of preview version v0.7.0 you can install `Rancher Desktop` in Windows, Mac and Linux. `Rancher Desktop` runs up a VM on all three, which allows `Rancher Desktop`'s kubernetes install to be isolated from your desktop.
+As of mid-December 2021 with the release of preview version v0.7.1 you can install `Rancher Desktop` in Windows, Mac and Linux. `Rancher Desktop` runs up a VM on all three, which allows `Rancher Desktop`'s kubernetes install to be isolated from your desktop.
 
-I have installed v0.7.0 onto a Mac, by downloading the .dmg from [https://github.com/rancher-sandbox/rancher-desktop/releases](https://github.com/rancher-sandbox/rancher-desktop/releases) (plus-open the Assets and download Rancher.Desktop-0.7.0.x86_64.dmg).
+I have installed v0.7.1 onto a Mac, by downloading the .dmg from [https://github.com/rancher-sandbox/rancher-desktop/releases](https://github.com/rancher-sandbox/rancher-desktop/releases) (plus-open the Assets and download Rancher.Desktop-0.7.1.x86_64.dmg).
 
 I have also installed on GNU Linux Ubuntu 20.04 desktop, by adding their repo - but you could download the .deb - details here [https://software.opensuse.org/download.html?project=isv%3ARancher%3Astable&package=rancher-desktop](https://software.opensuse.org/download.html?project=isv%3ARancher%3Astable&package=rancher-desktop).
 
