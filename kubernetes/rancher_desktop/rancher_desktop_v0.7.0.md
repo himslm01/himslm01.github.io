@@ -43,6 +43,22 @@ You are supposed to be able to substitute `nerdctl` for `docker` (or create an a
 
 Because of that issue, `Rancher Desktop` can now be switched to use `dockerd` as the container runtime (okay - it's actually `containerd` underneath `dockerd`, but `dockerd` is in control). This means you can use the `docker` command line tool (which also comes bundled with `Rancher Desktop`) and building images works as expected.
 
+### Get a shell into the Rancher Desktop VM
+
+Since Rancher Desktop spins up a VM in which it runs `containerd` or `dockerd`, using Qemu or a WSL instance on Windows, there might be occasions when it would be useful to access the VM - for investigating issues, for instance.
+
+On a Mac you do this - it's all one command and the quotes around the paths is important due to there being spaces in them:
+
+    LIMA_HOME="$HOME/Library/Application Support/rancher-desktop/lima" \
+      "/Applications/Rancher Desktop.app/Contents/Resources/resources/darwin/lima/bin/limactl" \
+      shell 0
+
+On Linux you do this - it's all one command:
+
+      LIMA_HOME="$HOME/.local/share/rancher-desktop/lima" \
+        /opt/rancher-desktop/resources/resources/linux/lima/bin/limactl \
+        shell 0
+
 ## Problems
 
 ### Configuring the Rancher Desktop container runtime to pull images from private repositories is difficult.
