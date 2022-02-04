@@ -120,3 +120,16 @@ See [https://github.com/containerd/nerdctl/issues/434](https://github.com/contai
 #### Workaround
 
 Switch the container runtime from `containerd` to `dockerd (moby)`.
+
+### Rancher Desktop binds to ports 80 and 443
+
+When Rancher Desktop is started it binds to ports 80 and 443, which may conflict with other software you may be running. This is because Rancher Desktop runs [k3s](http://k3s.io/) as the Kubernetes implementation, and by default it runs Træfik as the ingress controller.
+
+#### Workaround
+
+Uninstall Træfik:
+
+    helm uninstall traefik --namespace kube-system
+    helm uninstall traefik-crd --namespace kube-system
+    kubectl delete helmcharts traefik --namespace kube-system
+    kubectl delete helmcharts traefik-crd --namespace kube-system
