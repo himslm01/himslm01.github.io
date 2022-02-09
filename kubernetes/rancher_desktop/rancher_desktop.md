@@ -83,7 +83,6 @@ You can define both `/etc/rancher/k3s/registries.yaml` and `/etc/docker/daemon.j
 
 - Linux: `$HOME/.local/share/rancher-desktop/lima/_config/override.yaml`
 - Mac: `$HOME/Library/Application Support/rancher-desktop/lima/_config/override.yaml`
-- Windows: `???`
 
 Here's an example override.yaml
 
@@ -110,6 +109,8 @@ Here's an example override.yaml
             "experimental": true
         }
         EOF
+
+On Windows I think you just edit /etc/docker/daemon.json in the WSL image and restart Rancher Desktop.
 
 See [https://github.com/rancher-sandbox/rancher-desktop/issues/721](https://github.com/rancher-sandbox/rancher-desktop/issues/721).
 
