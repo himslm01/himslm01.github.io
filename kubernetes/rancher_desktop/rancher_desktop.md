@@ -87,7 +87,7 @@ You can define both `/etc/rancher/k3s/registries.yaml` and `/etc/docker/daemon.j
 Here's an example override.yaml
 
     provision:
-    - mode: system
+      - mode: system
         script: |
         #!/bin/sh
         set -eux
