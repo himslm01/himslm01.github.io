@@ -2,7 +2,7 @@
 
 ## Generaly required stuff
 
-1. Update apt and install retuired stuff
+1. Update apt and install required stuff
 
        sudo apt update
        sudo apt install apt-transport-https \

@@ -4,7 +4,7 @@
 
 This does not work on arm/v7 or arm64 - it will not work on a Raspberry Pi
 
-## Instalation
+## Installation
 
 Make yourself a k3s cluster using version >= 1.21. It can have one node or many nodes, it doesn't matter. This will give you Træfik v2, which we can leverage to make sure the hello-world app is served securely.
 

@@ -9,7 +9,7 @@
     * icon size: 28px
   * Launchers
     * Show open windows previews
-  * Behavior
+  * Behaviour
     * Click action -> Show window previews
     * Scroll action -> Cycle through windows
   * Appearance
