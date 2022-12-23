@@ -1,3 +1,6 @@
+---
+layout: default
+---
 # WSTunnel and Wireguard
 
 ## Overview
