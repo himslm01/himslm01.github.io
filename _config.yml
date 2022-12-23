@@ -2,8 +2,11 @@ theme: minima
 title: Mark Himsley
 description: A collection of notes and thoughts
 logo: https://avatars.githubusercontent.com/u/1175979
-# see https://github.com/jekyll/minima/issues/219
-header_pages: ['']
-# see https://github.com/jekyll/minima and http://shopify.github.io/liquid/filters/date/
-minima:
-  date_format: "%Y-%m-%d"
+header_pages: [''] # see https://github.com/jekyll/minima/issues/219
+minima: # see https://github.com/jekyll/minima
+  date_format: "%Y-%m-%d" # see http://shopify.github.io/liquid/filters/date/
+defaults:
+  - scope:
+      path: "" # an empty string here means all files in the project
+    values:
+      layout: "default"
