@@ -2,4 +2,5 @@ theme: minima
 title: Mark Himsley
 description: A collection of notes and thoughts
 logo: https://avatars.githubusercontent.com/u/1175979
-header_pages: []
+# see https://github.com/jekyll/minima/issues/219
+header_pages: ['']
