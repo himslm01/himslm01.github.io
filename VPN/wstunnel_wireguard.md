@@ -1,4 +1,4 @@
-# WSTunnel and Wireguard
+# WSTunnel and WireGuard
 
 ## Overview
 
@@ -23,7 +23,7 @@ I'm going to use the following components:
 
 * a Linux server with a kernel that supports [WireGuard](https://www.wireguard.com/) on the corporate network. I'll need root access, which I will achieve using `sudo`. This guide will call this server the `WireGuird client`.
 * the corporate network's HTTP/HTTPS forward proxy
-* an instance of [Traefik](https://traefik.io/traefik/) which is publicly available running in a kubernetes cluster
+* an instance of [Træfik](https://traefik.io/traefik/) which is publicly available running in a kubernetes cluster
 * a Linux server with a kernel that supports [WireGuard](https://www.wireguard.com/) on the other network behind the Treafik reverse-proxy. I'll need root access, which I will achieve using `sudo`. This guide will call this server the `WireGuird server`.
 * [WSTunnel](https://github.com/erebe/wstunnel/) installed on both the `WireGuird client` and the `WireGuird server`
 * [WSTunnel](https://github.com/erebe/wstunnel/) tools `wg` and `wg-quick` installed on both the `WireGuird client` and the `WireGuird server`
@@ -44,17 +44,17 @@ sudo apt update
 sudo apt install curl ncat tcpdump
 ```
 
-## Configure Traefik ingress
+## Configure Træfik ingress
 
-I'm going to start in the bottom right of the network topology diagram by configuring [Traefik](https://traefik.io/traefik/), and then work towards each of the two ends. This is the easiest way to test that every component works before I continue to the next component.
+I'm going to start in the bottom right of the network topology diagram by configuring [Træfik](https://traefik.io/traefik/), and then work towards each of the two ends. This is the easiest way to test that every component works before I continue to the next component.
 
-[Traefik](https://traefik.io/traefik/) is a reverse-proxy service, accepting incoming https connections from the Internet. [Traefik](https://traefik.io/traefik/) will be terminating TLS with a trusted certificate and routing the incoming web-socket connection onto the [WSTunnel](https://github.com/erebe/wstunnel/) server.
+[Træfik](https://traefik.io/traefik/) is a reverse-proxy service, accepting incoming https connections from the Internet. [Træfik](https://traefik.io/traefik/) will be terminating TLS with a trusted certificate and routing the incoming web-socket connection onto the [WSTunnel](https://github.com/erebe/wstunnel/) server.
 
-This guide assumes that [Traefik](https://traefik.io/traefik/) is running in a [Kubernetes](https://kubernetes.io/) cluster, and the [Traefik](https://traefik.io/traefik/) `websecure` `entrypoint` is publicly accessible from the Internet via some form of `LoadBalancer`.
+This guide assumes that [Træfik](https://traefik.io/traefik/) is running in a [Kubernetes](https://kubernetes.io/) cluster, and the [Træfik](https://traefik.io/traefik/) `websecure` `entrypoint` is publicly accessible from the Internet via some form of `LoadBalancer`.
 
-### Traefik routing to Services with ExternalNames
+### Træfik routing to Services with ExternalNames
 
-[Traefik](https://traefik.io/traefik/) must allow routing to `Services` of `type` `ExternalName`. As described [in this post](https://community.traefik.io/t/allowexternalnameservices-parameter-not-working-well-in-helm-chart/11653/3), in [Traefik](https://traefik.io/traefik/) version 2 my [Traefik](https://traefik.io/traefik/) `Deployment` had to be updated by adding the following into the [Traefik](https://traefik.io/traefik/) `container`'s `args`, and restarting the deployment.
+[Træfik](https://traefik.io/traefik/) must allow routing to `Services` of `type` `ExternalName`. As described [in this post](https://community.traefik.io/t/allowexternalnameservices-parameter-not-working-well-in-helm-chart/11653/3), in [Træfik](https://traefik.io/traefik/) version 2 my [Træfik](https://traefik.io/traefik/) `Deployment` had to be updated by adding the following into the [Træfik](https://traefik.io/traefik/) `container`'s `args`, and restarting the deployment.
 
 ```console
             - '--providers.kubernetesingress.allowemptyservices=true'
@@ -63,14 +63,14 @@ This guide assumes that [Traefik](https://traefik.io/traefik/) is running in a [
             - '--providers.kubernetescrd.allowexternalnameservices=true'
 ```
 
-### Traefik manifest
+### Træfik manifest
 
 The example [Kubernetes](https://kubernetes.io/) manifest below will create:
 
 * a new `Namespace` in the [Kubernetes](https://kubernetes.io/) cluster
 * a new `Service` in the `Namespace` with an `ExternalName` pointing to the `WireGuard server` Linux server
-* a [Traefik](https://traefik.io/traefik/) `ServersTransport` in the `Namespace` which configurs how [Traefik](https://traefik.io/traefik/) will connect to the `Service`
-* a [Traefik](https://traefik.io/traefik/) `IngressRoute` in the `Namespace` routing all connections to the configured host `wstunnel-wireguard.example.com` through to the [Kubernetes](https://kubernetes.io/) `Service`
+* a [Træfik](https://traefik.io/traefik/) `ServersTransport` in the `Namespace` which configurs how [Træfik](https://traefik.io/traefik/) will connect to the `Service`
+* a [Træfik](https://traefik.io/traefik/) `IngressRoute` in the `Namespace` routing all connections to the configured host `wstunnel-wireguard.example.com` through to the [Kubernetes](https://kubernetes.io/) `Service`
 
 For this example I'm using a TLS certificate which is already stored in the namespace.
 
@@ -128,23 +128,23 @@ kubectl config use-context <MY-KUBERNETES-CLUSTER-CONTEXT>
 kubectl apply -f wstunnel-reverse-proxy.yaml
 ```
 
-### Test Traefik routing
+### Test Træfik routing
 
-I gained shell access to the `WireGuard server` Linux server and ran `ncat` listening on port 8080, which is the port defined in the [Traefik](https://traefik.io/traefik/) `IngressRoute`.
+I gained shell access to the `WireGuard server` Linux server and ran `ncat` listening on port 8080, which is the port defined in the [Træfik](https://traefik.io/traefik/) `IngressRoute`.
 
 ```console
 ncat -k -l 0.0.0.0 8080
 ```
 
-Then I connected using HTTPS to the [Traefik](https://traefik.io/traefik/) service requesting the host I defined - in my example that is `https://wstunnel-wireguard.example.com`
+Then I connected using HTTPS to the [Træfik](https://traefik.io/traefik/) service requesting the host I defined - in my example that is `https://wstunnel-wireguard.example.com`
 
-I gained shell access to the `WireGuard client` Linux server and tested that it can connect to the `WireGuard server` via the corporate forward HTTP/HTTPS proxy and the [Traefik](https://traefik.io/traefik/) Service.
+I gained shell access to the `WireGuard client` Linux server and tested that it can connect to the `WireGuard server` via the corporate forward HTTP/HTTPS proxy and the [Træfik](https://traefik.io/traefik/) Service.
 
 ```console
 HTTPS_PROXY=http://corporate.proxy curl -v https://wstunnel-wireguard.example.com
 ```
 
-On the console of the `WireGuard server` running `ncat` behind the [Traefik](https://traefik.io/traefik/) `Service` I saw the connection attempt.
+On the console of the `WireGuard server` running `ncat` behind the [Træfik](https://traefik.io/traefik/) `Service` I saw the connection attempt.
 
 ```console
 GET / HTTP/1.1
@@ -164,7 +164,7 @@ The `curl` command will hang for a while because `ncat` will not be returning an
 
 When that worked I stopped the `ncat` process with `CTRL-C`.
 
-If I needed to debug [Traefik](https://traefik.io/traefik/) I could have added the following into the [Traefik](https://traefik.io/traefik/) `container`'s `args` and restarted the deployment.
+If I needed to debug [Træfik](https://traefik.io/traefik/) I could have added the following into the [Træfik](https://traefik.io/traefik/) `container`'s `args` and restarted the deployment.
 
 ```console
             - '--log.level=DEBUG'
@@ -473,9 +473,9 @@ sudo tcpdump -i eno1 host corporate.proxy
 
 ## Improvements
 
-### Make Traefik IngressRoute more specific
+### Make Træfik IngressRoute more specific
 
-Right at the start of this article I created a [Traefik](https://traefik.io/traefik/) `IngressRoute` with a `rule` which selected all connections to the `host` `wstunnel-wireguard.example.com` to be forwarded to the [WSTunnel](https://github.com/erebe/wstunnel/) service.
+Right at the start of this article I created a [Træfik](https://traefik.io/traefik/) `IngressRoute` with a `rule` which selected all connections to the `host` `wstunnel-wireguard.example.com` to be forwarded to the [WSTunnel](https://github.com/erebe/wstunnel/) service.
 
 ```yaml
   routes:
@@ -491,9 +491,9 @@ I even configured the [WSTunnel](https://github.com/erebe/wstunnel/) service on 
 
 The path that [WSTunnel](https://github.com/erebe/wstunnel/) uses for this destination is `/wstunnel/udp/127.0.0.1/51820`
 
-When I try to `GET` to any random path on the host `wstunnel-wireguard.example.com` [Traefik](https://traefik.io/traefik/) will forward it to the [WSTunnel](https://github.com/erebe/wstunnel/) service [WSTunnel](https://github.com/erebe/wstunnel/) will return an HTTP status `400` and a body of `Invalid tunneling information` unless the path exactly matches the path that [WSTunnel](https://github.com/erebe/wstunnel/) expects. [WSTunnel](https://github.com/erebe/wstunnel/) also logs `Rejecting connection` - visible with `sudo journalctl -f -u wstunnel`.
+When I try to `GET` to any random path on the host `wstunnel-wireguard.example.com` [Træfik](https://traefik.io/traefik/) will forward it to the [WSTunnel](https://github.com/erebe/wstunnel/) service [WSTunnel](https://github.com/erebe/wstunnel/) will return an HTTP status `400` and a body of `Invalid tunneling information` unless the path exactly matches the path that [WSTunnel](https://github.com/erebe/wstunnel/) expects. [WSTunnel](https://github.com/erebe/wstunnel/) also logs `Rejecting connection` - visible with `sudo journalctl -f -u wstunnel`.
 
-Basic security best practices says that I should expose as little of our services as possible. Therefore, I should configure [Traefik](https://traefik.io/traefik/) to only pass WebSocket connections which exactly match the above path through to the [WSTunnel](https://github.com/erebe/wstunnel/) service.
+Basic security best practices says that I should expose as little of our services as possible. Therefore, I should configure [Træfik](https://traefik.io/traefik/) to only pass WebSocket connections which exactly match the above path through to the [WSTunnel](https://github.com/erebe/wstunnel/) service.
 
 I can achieve this by updating the manifest to match on the `host` and the `path` and apply that manifest again.
 
@@ -507,6 +507,6 @@ I can achieve this by updating the manifest to match on the `host` and the `path
 kubectl apply -f wstunnel-reverse-proxy.yaml
 ```
 
-With that change applied, when I try to `GET` to any random path on the host `wstunnel-wireguard.example.com` the request is no longer forwarded to the [WSTunnel](https://github.com/erebe/wstunnel/) service. Instead [Traefik](https://traefik.io/traefik/) returns an HTTP status `404` and a body of `404 page not found`.
+With that change applied, when I try to `GET` to any random path on the host `wstunnel-wireguard.example.com` the request is no longer forwarded to the [WSTunnel](https://github.com/erebe/wstunnel/) service. Instead [Træfik](https://traefik.io/traefik/) returns an HTTP status `404` and a body of `404 page not found`.
 
 But the [WireGuard](https://www.wireguard.com/) VPN continues to function exactly as before, because the exact path the [WSTunnel](https://github.com/erebe/wstunnel/) is using to transport the [WireGuard](https://www.wireguard.com/) VPN will be forwarded to the [WSTunnel](https://github.com/erebe/wstunnel/) service.

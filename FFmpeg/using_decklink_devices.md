@@ -2,20 +2,20 @@
 
 I build my own versions of FFmpeg. I build both static and shared library versions. MOsst of the time I use the static version, but for this I must use the shared library version, so that it will use the shared BlackMagic Design Decklink shared libraries.
 
-To help me use the shared library version of FFmpeg I have a small shell script I sate into `$HOME/bin/ffmpeg_shared`:
+To help me use the shared library version of FFmpeg I have a small shell script I save into `$HOME/bin/ffmpeg_shared`:
 
 ```bash
 #!/bin/sh
 
-LD_LIBRARY_PATH=$HOME/Source/eng-bsd-himslm01-docker-ff_builder/build/linux_x86_64/ffmpeg_shared/lib/lib/ \
-    $HOME/Source/eng-bsd-himslm01-docker-ff_builder/build/linux_x86_64/ffmpeg_shared/bin/ffmpeg \
+LD_LIBRARY_PATH=$HOME/Source/ff_builder/build/linux_x86_64/ffmpeg_shared/lib/lib/ \
+    $HOME/Source/ff_builder/build/linux_x86_64/ffmpeg_shared/bin/ffmpeg \
     "$@"
 ````
 
 ## List Decklink sources
 
 ```console
-$ bin/ffmpeg_shared -sources decklink
+$ ffmpeg_shared -sources decklink
 ffmpeg version N-96958-g8f22257-shared_linux_x86_64_202003141011 Copyright (c) 2000-2020 the FFmpeg developers
   built with gcc 5.4.0 (Ubuntu 5.4.0-6ubuntu1~16.04.12) 20160609
   configuration: --extra-version=shared_linux_x86_64_202003141011 --extra-cflags=' ' --extra-libs=' -lpthread -lm' --pkg-config-flags= --cross-prefix= --arch=x86_64 --target-os=linux --prefix=/opt/ffbuild --enable-gpl --enable-version3 --enable-nonfree --disable-ffplay --disable-dxva2 --enable-libxml2 --enable-openssl --enable-libsrt --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libopus --enable-libxvid --enable-libvpx --enable-libfdk-aac --enable-libx264 --enable-libx265 --enable-libopenjpeg --enable-libaom --enable-decklink
@@ -34,7 +34,7 @@ Auto-detected sources for decklink:
 Or
 
 ```console
-$ bin/ffmpeg_shared -sources decklink
+$ ffmpeg_shared -sources decklink
 ffmpeg version N-96920-ge6c5329-shared_linux_x86_64_202003092300 Copyright (c) 2000-2020 the FFmpeg developers
   built with gcc 5.4.0 (Ubuntu 5.4.0-6ubuntu1~16.04.12) 20160609
   configuration: --extra-version=shared_linux_x86_64_202003092300 --extra-cflags=' ' --extra-libs=' -lpthread -lm' --pkg-config-flags= --cross-prefix= --arch=x86_64 --target-os=linux --prefix=/opt/ffbuild --enable-gpl --enable-version3 --enable-nonfree --disable-ffplay --disable-dxva2 --enable-libxml2 --enable-openssl --enable-libsrt --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libopus --enable-libxvid --enable-libvpx --enable-libfdk-aac --enable-libx264 --enable-libx265 --enable-libopenjpeg --enable-libaom --enable-decklink
@@ -54,7 +54,7 @@ Auto-detected sources for decklink:
 ### List formats for capture
 
 ```console
-$ bin/ffmpeg_shared -f decklink -f decklink -list_formats 1 -i "DeckLink SDI (2)"
+$ ffmpeg_shared -f decklink -f decklink -list_formats 1 -i "DeckLink SDI (2)"
 ffmpeg version N-96920-ge6c5329-shared_linux_x86_64_202003092300 Copyright (c) 2000-2020 the FFmpeg developers
   built with gcc 5.4.0 (Ubuntu 5.4.0-6ubuntu1~16.04.12) 20160609
   configuration: --extra-version=shared_linux_x86_64_202003092300 --extra-cflags=' ' --extra-libs=' -lpthread -lm' --pkg-config-flags= --cross-prefix= --arch=x86_64 --target-os=linux --prefix=/opt/ffbuild --enable-gpl --enable-version3 --enable-nonfree --disable-ffplay --disable-dxva2 --enable-libxml2 --enable-openssl --enable-libsrt --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libopus --enable-libxvid --enable-libvpx --enable-libfdk-aac --enable-libx264 --enable-libx265 --enable-libopenjpeg --enable-libaom --enable-decklink
@@ -88,7 +88,7 @@ DeckLink SDI (2): Immediate exit requested
 or
 
 ```console
-$ bin/ffmpeg_shared -f decklink -f decklink -list_formats 1 -i "Intensity Pro 4K"
+$ ffmpeg_shared -f decklink -f decklink -list_formats 1 -i "Intensity Pro 4K"
 ffmpeg version N-96958-g8f22257-shared_linux_x86_64_202003141011 Copyright (c) 2000-2020 the FFmpeg developers
   built with gcc 5.4.0 (Ubuntu 5.4.0-6ubuntu1~16.04.12) 20160609
   configuration: --extra-version=shared_linux_x86_64_202003141011 --extra-cflags=' ' --extra-libs=' -lpthread -lm' --pkg-config-flags= --cross-prefix= --arch=x86_64 --target-os=linux --prefix=/opt/ffbuild --enable-gpl --enable-version3 --enable-nonfree --disable-ffplay --disable-dxva2 --enable-libxml2 --enable-openssl --enable-libsrt --enable-libmp3lame --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libopus --enable-libxvid --enable-libvpx --enable-libfdk-aac --enable-libx264 --enable-libx265 --enable-libopenjpeg --enable-libaom --enable-decklink
@@ -130,7 +130,7 @@ ffmpeg version N-96958-g8f22257-shared_linux_x86_64_202003141011 Copyright (c) 2
 ### Big Buck Bunny to Intensity Pro 4K at 1920x1080p50
 
 ```console
-$ ~/bin/ffmpeg_shared \
+$ ffmpeg_shared \
   -i big_buck_bunny_1080p_h264.mov \
   -filter:v scale=1920:1080:interl=0,format=yuv422p,framerate=50 \
   -c:v v210 \
@@ -141,7 +141,7 @@ $ ~/bin/ffmpeg_shared \
 ### From NewsChannel iPlayer DASH stream to Decklink
 
 ```console
-$ ~/bin/ffmpeg_shared \
+$ ffmpeg_shared \
   -i https://vs-cmaf-push-uk-live.akamaized.net/x=3/i=urn:bbc:pips:service:bbc_news_channel_hd/pc_hd_abr_v2.mpd \
   -map 0:5 -map 0:6 \
   -filter:v "scale=1920:1080:interl=0:sws_flags=lanczos,format=yuv422p,framerate=50" \
@@ -153,7 +153,7 @@ $ ~/bin/ffmpeg_shared \
 ### From YouTube through FFmpeg to Decklink
 
 ```console
-$ ~/bin/ffmpeg_shared \
+$ ffmpeg_shared \
   $(youtube-dl -g "https://www.youtube.com/watch?v=dQw4w9WgXcQ" \
   | while read -d $'\n' file; do echo -n "-i ${file} "; done) \
   -filter:v "scale=1920:1080:interl=0:sws_flags=lanczos,format=yuv422p,framerate=50" \
@@ -193,7 +193,7 @@ gst-launch-1.0 -v \
 ### Capture from Decklink and stream to srt
 
 ```console
-$ bin/ffmpeg_shared -re \
+$ ffmpeg_shared -re \
   -channels 2 -format_code Hi50 -f decklink -i "DeckLink SDI (1)" \
   -map 0:0 -map 0:1 \
   -filter:v "scale=0:0:interl=1,format=yuv420p" \
@@ -228,7 +228,7 @@ $ bin/ffmpeg_shared -re \
 Assume the srt stream is being created on `10.11.12.13`:
 
 ```console
-$ bin/ffmpeg_shared -re \
+$ ffmpeg_shared -re \
   -i "srt://10.11.12.13:1364" \
   -filter:v "scale=1920:1080:interl=1:sws_flags=lanczos,format=yuv422p,w3fdif,framerate=50" \
   -c:v v210 \
@@ -239,7 +239,7 @@ $ bin/ffmpeg_shared -re \
 ### From srt stream create simple UDP multicast stream
 
 ```console
-$ bin/ffmpeg_shared -re \
+$ ffmpeg_shared -re \
   -i "srt://10.11.12.13:1364" \
   -c:v copy \
   -c:a copy \
@@ -250,7 +250,7 @@ $ bin/ffmpeg_shared -re \
 ### From UDP stream play to Decklink
 
 ```console
-$ bin/ffmpeg_shared -re \
+$ ffmpeg_shared -re \
   -i "udp://239.0.0.2:1234?pkt_size=1316" \
   -filter:v "scale=1920:1080:interl=1:sws_flags=lanczos,format=yuv422p,w3fdif,framerate=50" \
   -c:v v210 \
