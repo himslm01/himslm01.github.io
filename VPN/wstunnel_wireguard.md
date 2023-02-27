@@ -234,12 +234,14 @@ cat <<EOF | sudo tee /etc/systemd/system/wstunnel.service >/dev/null
 [Unit]
 Description=WSTunnel server over which to tunnel WireGuard UDP VPN
 After=network.target
+StartLimitIntervalSec=0
 
 [Service]
 Type=simple
 User=nobody
 ExecStart=/usr/local/bin/wstunnel -v --server ws://0.0.0.0:8080 --restrictTo=127.0.0.1:51820
-Restart=yes
+Restart=always
+RestartSec=3
 
 [Install]
 WantedBy=multi-user.target
