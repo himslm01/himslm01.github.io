@@ -17,23 +17,33 @@ For me, that is backwards, especially for this requirement.
 
 For this guide I will start by making and testing a [WSTunnel](https://github.com/erebe/wstunnel/) web-socket tunnel and then finish with tunnelling a [WireGuard](https://www.wireguard.com/) VPN in the [WSTunnel](https://github.com/erebe/wstunnel/) web-socket tunnel.
 
+### Network topology
+
+![WireGuard + WSTunnel network topology diagram](wstunnel_wireguard_network_topology.png)
+
 ### Ingredients
 
 I'm going to use the following components:
 
-* a Linux server with a kernel that supports [WireGuard](https://www.wireguard.com/) on the corporate network. I'll need root access, which I will achieve using `sudo`. This guide will call this server the `WireGuird client`.
-* the corporate network's HTTP/HTTPS forward proxy
-* an instance of [Træfik](https://traefik.io/traefik/) which is publicly available running in a kubernetes cluster
-* a Linux server with a kernel that supports [WireGuard](https://www.wireguard.com/) on the other network behind the Treafik reverse-proxy. I'll need root access, which I will achieve using `sudo`. This guide will call this server the `WireGuird server`.
-* [WSTunnel](https://github.com/erebe/wstunnel/) installed on both the `WireGuird client` and the `WireGuird server`
-* [WSTunnel](https://github.com/erebe/wstunnel/) tools `wg` and `wg-quick` installed on both the `WireGuird client` and the `WireGuird server`
-* [curl](https://curl.se/) - for downloading software and testing HTTP/HTTPS connections
-* [ncat](https://nmap.org/ncat/) (or any other [netcat](https://en.wikipedia.org/wiki/Netcat) variant) - for testing
-* [tcpdump](https://www.tcpdump.org/) - for testing
+* on the corporate network:
+  * a server that supports [WireGuard](https://www.wireguard.com/). I'm going to use Linux server. I'll need root access, which I will achieve using `sudo`. This guide will call this server the `WireGuird client`.
+  * a server that can run [WSTunnel](https://github.com/erebe/wstunnel/) on the corporate network. I'm going to use the same Linux server as the `WireGuird client`. I'll need root access, which I will achieve using `sudo`.
+  * the hostname and port of the corporate network's HTTP/HTTPS proxy.
+* publicly available from the Internet (either directly available or via a port forward on a NAT firewall):
+  * an HTTP/HTTPS reverse proxy server. I'm going to demonstrate how this can be achieved using an instance of [Træfik](https://traefik.io/traefik/) running in a kubernetes cluster, and using [Nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/) on a Linux server (which could be a Raspberry Pi).
+  * TLS certificates for the hostname of the reverse proxy server.
+* on the other network behind the reverse-proxy:
+  * a server that can run [WSTunnel](https://github.com/erebe/wstunnel/). This could either be the same Linux server which is running the [Nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/) HTTP/HTTPS reverse proxy, or the same Linux server which is running the [WireGuard](https://www.wireguard.com/) software.
+  * a server that supports [WireGuard](https://www.wireguard.com/). I'm going to demonstrate how this can be achieved using a Linux server, and how this can be achieved using a [Mikrotik router](https://mikrotik.com/products/group/ethernet-routers). I'll need root access to the Linux server, which I will achieve using `sudo`, or access to the Mikrotik command-line-interface / WebFig / Winbox. This guide will call this server the `WireGuird server`.
 
-### Network topology
+Software components:
 
-![WireGuard + WSTunnel network topology diagram](wstunnel_wireguard_network_topology.png)
+* [WireGuard](https://www.wireguard.com/) tools `wg` and `wg-quick` installed on a server on the corporate network, and installed on a server on the other network or a [Mikrotik router](https://mikrotik.com/products/group/ethernet-routers) on the other network.
+* [WSTunnel](https://github.com/erebe/wstunnel/) installed on a server on the corporate network and on a server on the other network.
+* an HTTP/HTTPS reverse proxy - [Træfik](https://traefik.io/traefik/) or [Nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/).
+* [curl](https://curl.se/) - for downloading software and testing HTTP/HTTPS connections, installed on a server on the corporate network and on a server on the other network.
+* [ncat](https://nmap.org/ncat/) (or any other [netcat](https://en.wikipedia.org/wiki/Netcat) variant) - for testing, installed on the `WireGuird client` server on the corporate network and on the `WireGuird server` server on the other network.
+* Optional [tcpdump](https://www.tcpdump.org/) - for testing, installed on the `WireGuird client` server on the corporate network and on the `WireGuird server` server on the other network.
 
 ## Install test tools
 
@@ -44,15 +54,37 @@ sudo apt update
 sudo apt install curl ncat tcpdump
 ```
 
-## Configure Træfik ingress
+## Options for installation
 
-I'm going to start in the bottom right of the network topology diagram by configuring [Træfik](https://traefik.io/traefik/), and then work towards each of the two ends. This is the easiest way to test that every component works before I continue to the next component.
+I'm going to describe two different options for installation, which might depend on the available servers at the server (non-corporate) end of the connection.
 
-[Træfik](https://traefik.io/traefik/) is a reverse-proxy service, accepting incoming https connections from the Internet. [Træfik](https://traefik.io/traefik/) will be terminating TLS with a trusted certificate and routing the incoming web-socket connection onto the [WSTunnel](https://github.com/erebe/wstunnel/) server.
+### Option 1 - server to server
+
+![WireGuard + WSTunnel - server to server diagram](wstunnel_wireguard_server_to_server.png)
+
+### Option 2 - server to MikroTik router
+
+![WireGuard + WSTunnel - server to MikroTik diagram](wstunnel_wireguard_server_to_mikrotik.png)
+
+## Installation
+
+I'm going to start in the bottom left of the network topology diagram by installing, configuring, and testing the http/https reverse proxy. Then I'm going to move in steps towards each of the two ends - installing, configuring, and testing each component in turn.
+
+### HTTP/HTTPS reverse proxy
+
+This guide assumes that the HTTP/HTTPS reverse proxy is available from the Internet via a port-forward on my Internet gateway router.
+
+I'm going to describe two options for running the HTTP/HTTPS reverse proxy - my preferred method is to use the [Træfik](https://traefik.io/traefik/) ingress controller running in my Kubernetes cluster, but an alternate method is to run [Nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/) on a [Raspberry Pi](https://www.raspberrypi.com/products/raspberry-pi-3-model-b/).
+
+#### Option 1 - Træfik ingress
+
+[Træfik](https://traefik.io/traefik/) is a reverse-proxy service, accepting incoming HTTP/HTTPS connections from the Internet. [Træfik](https://traefik.io/traefik/) will be terminating TLS with a trusted certificate and routing the incoming web-socket connection onto the [WSTunnel](https://github.com/erebe/wstunnel/) server.
 
 This guide assumes that [Træfik](https://traefik.io/traefik/) is running in a [Kubernetes](https://kubernetes.io/) cluster, and the [Træfik](https://traefik.io/traefik/) `websecure` `entrypoint` is publicly accessible from the Internet via some form of `LoadBalancer`.
 
-### Træfik routing to Services with ExternalNames
+This guide also assumes that you have an HTTPS TLS certificate and key for the hostname you are using stored in a `secret` and available for [Træfik](https://traefik.io/traefik/) to use.
+
+##### Træfik routing to Services with ExternalNames
 
 [Træfik](https://traefik.io/traefik/) must allow routing to `Services` of `type` `ExternalName`. As described [in this post](https://community.traefik.io/t/allowexternalnameservices-parameter-not-working-well-in-helm-chart/11653/3), in [Træfik](https://traefik.io/traefik/) version 2 my [Træfik](https://traefik.io/traefik/) `Deployment` had to be updated by adding the following into the [Træfik](https://traefik.io/traefik/) `container`'s `args`, and restarting the deployment.
 
@@ -63,7 +95,7 @@ This guide assumes that [Træfik](https://traefik.io/traefik/) is running in a [
             - '--providers.kubernetescrd.allowexternalnameservices=true'
 ```
 
-### Træfik manifest
+##### Træfik manifest
 
 The example [Kubernetes](https://kubernetes.io/) manifest below will create:
 
@@ -72,7 +104,7 @@ The example [Kubernetes](https://kubernetes.io/) manifest below will create:
 * a [Træfik](https://traefik.io/traefik/) `ServersTransport` in the `Namespace` which configurs how [Træfik](https://traefik.io/traefik/) will connect to the `Service`
 * a [Træfik](https://traefik.io/traefik/) `IngressRoute` in the `Namespace` routing all connections to the configured host `wstunnel-wireguard.example.com` through to the [Kubernetes](https://kubernetes.io/) `Service`
 
-For this example I'm using a TLS certificate which is already stored in the namespace.
+For this example I'm using a TLS certificate and key which are already stored in the namespace.
 
 ```yaml
 ---
@@ -128,23 +160,91 @@ kubectl config use-context <MY-KUBERNETES-CLUSTER-CONTEXT>
 kubectl apply -f wstunnel-reverse-proxy.yaml
 ```
 
-### Test Træfik routing
+#### Option 2 - Nginx service on a Raspberry Pi
 
-I gained shell access to the `WireGuard server` Linux server and ran `ncat` listening on port 8080, which is the port defined in the [Træfik](https://traefik.io/traefik/) `IngressRoute`.
+This guide assumes that you have a 64 bit [Raspberry Pi](https://www.raspberrypi.com/products/raspberry-pi-3-model-b/) (model 3B or greater) with [64 bit Raspberry Pi OS Lite](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) installed and configured.
+
+This guide also assumes that you have HTTPS TLS certificates for the hostname you are using saved on the filesystem of the [Raspberry Pi](https://www.raspberrypi.com/products/raspberry-pi-3-model-b/) and available for [Nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/) to use.
+
+##### Install Nginx
+
+```console
+sudo apt install nginx
+```
+
+##### Nginx service configuration
+
+```console
+cat <<EOF | sudo tee /etc/nginx/sites-available/wswg >/dev/null
+server {
+    listen 443 ssl;
+    server_name wstunnel-wireguard.example.com;
+
+    ssl_certificate     /home/pi/wswg_certs/public.crt;
+    ssl_certificate_key /home/pi/wswg_certs/private.key;
+    ssl_protocols       TLSv1.2;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+
+    # To allow special characters in headers
+    ignore_invalid_headers off;
+    # Allow any size file to be uploaded.
+    # Set to a value such as 1000m; to restrict file size to a specific value
+    client_max_body_size 0;
+    # To disable buffering
+    proxy_buffering off;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    location / {
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_set_header Host \$http_host;
+
+        proxy_connect_timeout 300;
+        # Default is HTTP/1, keepalive is only enabled in HTTP/1.1
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        chunked_transfer_encoding off;
+
+        proxy_pass http://127.0.0.1:8080;
+    }
+}
+EOF
+```
+
+You will note that the location of the HTTPS TLS certificate and key must match the location where I saved the files.
+
+Now I disabled the default site config and enabled the new site config, and reload [Nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/).
+
+```console
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -sf /etc/nginx/sites-available/wswg /etc/nginx/sites-enabled/wswg
+sudo systemctl reload nginx.service
+```
+
+#### Test HTTPS routing
+
+I gained shell access to the `WireGuard server` Linux server and ran `ncat` listening on port 8080, which is the port defined in the [Træfik](https://traefik.io/traefik/) `IngressRoute` and the [Nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/) server where the [WSTunnel](https://github.com/erebe/wstunnel/) will be running.
 
 ```console
 ncat -k -l 0.0.0.0 8080
 ```
 
-Then I connected using HTTPS to the [Træfik](https://traefik.io/traefik/) service requesting the host I defined - in my example that is `https://wstunnel-wireguard.example.com`
+Then I connected using HTTPS to the HTTPS reverse proxy service requesting the host I defined - in my example that is `https://wstunnel-wireguard.example.com`.
 
-I gained shell access to the `WireGuard client` Linux server and tested that it can connect to the `WireGuard server` via the corporate forward HTTP/HTTPS proxy and the [Træfik](https://traefik.io/traefik/) Service.
+To do so I gained shell access to the `WireGuard client` Linux server and tested that it can connect to the `WireGuard server` via the corporate forward HTTP/HTTPS proxy and the [Træfik](https://traefik.io/traefik/) Service.
 
 ```console
 HTTPS_PROXY=http://corporate.proxy curl -v https://wstunnel-wireguard.example.com
 ```
 
-On the console of the `WireGuard server` running `ncat` behind the [Træfik](https://traefik.io/traefik/) `Service` I saw the connection attempt.
+On the console of the `WireGuard server` running `ncat` behind the HTTPS reverse proxy I saw the connection attempt (in this case from the [Træfik](https://traefik.io/traefik/) `Service`).
 
 ```console
 GET / HTTP/1.1
@@ -170,16 +270,22 @@ If I needed to debug [Træfik](https://traefik.io/traefik/) I could have added t
             - '--log.level=DEBUG'
 ```
 
-## Install WSTunnel
+### Install WSTunnel
 
-I gained shell access to both the `WireGuard client` and the `WireGuard server` Linux servers and download the latest version of [WSTunnel](https://github.com/erebe/wstunnel/) from the releases page <https://github.com/erebe/wstunnel/releases> - at the time of writing it's version 4.1. I moved it into `/usr/local/bin/` and made it executable by everyone.
+[WSTunnel](https://github.com/erebe/wstunnel/) is going to be installed and configured on the `WireGuard client` and either on a dedicated `WireGuard server` machine along with [WireGuard](https://www.wireguard.com/), or it's going to be installed on the [Raspberry Pi](https://www.raspberrypi.com/products/raspberry-pi-3-model-b/) where the [Nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/) HTTP/HTTPS reverse proxy is installed.
+
+I gained shell access to both the Linux servers and download the latest version of [WSTunnel](https://github.com/erebe/wstunnel/) from the releases page <https://github.com/erebe/wstunnel/releases> - at the time of writing it's version 4.1. For the dedicated `WireGuard server` I downloaded the `linux-x64` version, on the [Raspberry Pi](https://www.raspberrypi.com/products/raspberry-pi-3-model-b/) I downloaded the `linux-aarch64.zip` and extracted the zip file. I moved `wstunnel` into `/usr/local/bin/` and made it executable by everyone.
 
 ```console
 # WireGuard client
-curl -o wstunnel https://github.com/erebe/wstunnel/releases/download/v4.1/wstunnel-x64-linux
+HTTPS_PROXY=http://corporate.proxy curl -o wstunnel https://github.com/erebe/wstunnel/releases/download/v4.1/wstunnel-x64-linux
 
 # WireGuard server
-HTTPS_PROXY=http://corporate.proxy curl -o wstunnel https://github.com/erebe/wstunnel/releases/download/v4.1/wstunnel-x64-linux
+curl -o wstunnel https://github.com/erebe/wstunnel/releases/download/v4.1/wstunnel-x64-linux
+
+## Raspberry Pi
+curl -o wstunnel.zip https://github.com/erebe/wstunnel/releases/download/v4.1/wstunnel-aarch64-linux.zip
+unzip wstunnel.zip
 
 sudo mv wstunnel /usr/local/bin/wstunnel
 sudo chmod a+x /usr/local/bin/wstunnel
@@ -192,6 +298,8 @@ I gained shell access to the `WireGuard server` Linux server and ran [WSTunnel](
 ```console
 /usr/local/bin/wstunnel -v --server ws://0.0.0.0:8080 --restrictTo=127.0.0.1:51820
 ```
+
+The `--restrictTo=` parameter above is correct for the case where [WSTunnel](https://github.com/erebe/wstunnel/) and [WireGuard](https://www.wireguard.com/) are going to be installed on the dedicated `WireGuard server` server. Where you have [WSTunnel](https://github.com/erebe/wstunnel/) installed on a [Raspberry Pi](https://www.raspberrypi.com/products/raspberry-pi-3-model-b/) and [WireGuard](https://www.wireguard.com/) configured on a [Mikrotik router](https://mikrotik.com/products/group/ethernet-routers) the `--restrictTo=` parameter should be the IPv4 address of your [Mikrotik router](https://mikrotik.com/products/group/ethernet-routers) and the port that [WireGuard](https://www.wireguard.com/) is configured to listen on.
 
 In another shell on the same the `WireGuard server` Linux server I ran `ncat` listening for UDP traffic on port 51820:
 
@@ -221,11 +329,11 @@ sudo tcpdump -i eno1 host corporate.proxy
 
 When that worked I stopped both of the `ncat` processes and both of the `wstunnel` processes with `CTRL-C`.
 
-## Install WSTunnel services to create the tunnel between the WireGuard client and WireGuard server
+### Install WSTunnel services to create the tunnel between the WireGuard client and WireGuard server
 
 Create `systemctl` unit files to start and run the [WSTunnel](https://github.com/erebe/wstunnel/) commands.
 
-### Install WSTunnel on WireGuard Server
+#### Install WSTunnel on WireGuard Server
 
 I gained shell access to the `WireGuard server` Linux server and created a systemd init file `/etc/systemd/system/wstunnel.service`:
 
@@ -250,6 +358,8 @@ EOF
 
 The `ExecStart` command line on the `WireGuard server` is exactly the same as was run manually above.
 
+Note the comments about the `--restrictTo=` parameter above.
+
 I enabled and started the service:
 
 ```console
@@ -262,7 +372,7 @@ The logs for this service can be monitored in the normal way:
 sudo journalctl -f -u wstunnel
 ```
 
-### Install WSTunnel on WireGuard Client
+#### Install WSTunnel on WireGuard Client
 
 I gained shell access to the `WireGuard client` Linux server and created a systemd init file `/etc/systemd/system/wstunnel.service`.
 
@@ -297,15 +407,15 @@ The logs for this service can be monitored in the normal way:
 sudo journalctl -f -u wstunnel
 ```
 
-### Test WSTunnel services
+#### Test WSTunnel services
 
 The `systemctl` managed [WSTunnel](https://github.com/erebe/wstunnel/) services were tested in the same was as the manually run [WSTunnel](https://github.com/erebe/wstunnel/) above, by running `ncat` at the two ends and exchanging lines of text and by watching `tcpdump`.
 
-## WireGuard
+### WireGuard
 
 Create [WireGuard](https://www.wireguard.com/) keys and configuration files such that `systemctl` can start and run the [WireGuard](https://www.wireguard.com/) VPN using the [WSTunnel](https://github.com/erebe/wstunnel/).
 
-### Install WireGuard software
+#### Install WireGuard software
 
 I gained shell access to both the `WireGuard server` and the `WireGuard client` the Linux servers and installed the [Wireguard tools](https://www.wireguard.com/install/) - for example, on Ubuntu 22.04 the commands would be:
 
@@ -313,7 +423,7 @@ I gained shell access to both the `WireGuard server` and the `WireGuard client` 
 sudo apt install wireguard
 ```
 
-### Create public and private keys
+#### Create public and private keys
 
 I created a `private key` and a `public key` for both of the [WireGuard](https://www.wireguard.com/) servers. The `private key` should be kept private and secure. As seen on the [WireGuard quickstart guide](https://www.wireguard.com/quickstart/), the generic way to create a [WireGuard](https://www.wireguard.com/) `private key` and `public key` is to use the `wg` command.
 
@@ -347,15 +457,15 @@ $ sudo cat client-publickey
 Sb8BGMV0MNlSZRbtyCBC/l1DYUUmUAl1TbDOOQUApgE=
 ```
 
-### WireGuard MTU
+#### WireGuard MTU
 
 The `MTU` has been calculated based on a underlying network capable of carrying 1500 byte packets carrying `IPv4` carrying `TCP` carrying `IPv4` carrying `UDP` carrying `WireGuard` wrapped data. (1500 - 20 - 20 - 20 - 8 - 32 = 1400). If the underlying network has smaller packets, for instance if part of the link uses `PPPoE`, then I would have reduced the `MTU` as appropriate.
 
-### WireGuard VPN network
+#### WireGuard VPN network
 
 I have picked the network `172.16.65.0/24` for the VPN between the `WireGuard client` and `WireGuard server`, with the `WireGuard server` being `172.16.65.1` and the `WireGuard client` being `172.16.65.2`. These IP address are irrespective of the IP addresses on the current Ethernet (or other) interfaces which already exist on the `WireGuard server` and the `WireGuard client`.
 
-### Configure WireGuard server
+#### Configure WireGuard server
 
 The `WireGuard server` will listen for incoming `UDP` packets on port `51820`, and will expect a connection with the `WireGuard client`'s public key.
 
@@ -384,7 +494,7 @@ The [WireGuard](https://www.wireguard.com/) service was enabled and started.
 sudo systemctl enable --now wg-quick@wg0.service
 ```
 
-### Configure WireGuard client
+#### Configure WireGuard client
 
 The `WireGuard client` will send WireGuard encrypted data to the 'remote' `EndPoint` - port `51820` of the `localhost` interface, which is where the [WSTunnel](https://github.com/erebe/wstunnel/) service is listening for data and transporting it to the `WireGuard server`. It will expect the [WireGuard](https://www.wireguard.com/) server at the other end to have the `WireGuard server`'s public key.
 
@@ -413,7 +523,7 @@ The [WireGuard](https://www.wireguard.com/) service was enabled and started.
 sudo systemctl enable --now wg-quick@wg0.service
 ```
 
-### Test WireGuard VPN connection
+#### Test WireGuard VPN connection
 
 To confirm that everything is working I checked that the `wg0` network interfaces exist, that routes have been created down the [WireGuard](https://www.wireguard.com/) VPN, and that unfragmentable ping packets up to 28 bytes less that the MTU could be exchanged between the two ends of the VPN.
 
