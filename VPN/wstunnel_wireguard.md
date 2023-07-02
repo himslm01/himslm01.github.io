@@ -104,7 +104,7 @@ The example [Kubernetes](https://kubernetes.io/) manifest below will create:
 * a [Træfik](https://traefik.io/traefik/) `ServersTransport` in the `Namespace` which configurs how [Træfik](https://traefik.io/traefik/) will connect to the `Service`
 * a [Træfik](https://traefik.io/traefik/) `IngressRoute` in the `Namespace` routing all connections to the configured host `wstunnel-wireguard.example.com` through to the [Kubernetes](https://kubernetes.io/) `Service`
 
-For this example I'm using a TLS certificate and key which are already stored in the namespace.
+For this example I'm using a TLS certificate and key which are already stored in the namespace, but you could use a certificate management service - but that's way beyond the scope of this guide.
 
 ```yaml
 ---
@@ -299,9 +299,9 @@ I gained shell access to the `WireGuard server` Linux server and ran [WSTunnel](
 /usr/local/bin/wstunnel -v --server ws://0.0.0.0:8080 --restrictTo=127.0.0.1:51820
 ```
 
-The `--restrictTo=` parameter above is correct for the case where [WSTunnel](https://github.com/erebe/wstunnel/) and [WireGuard](https://www.wireguard.com/) are going to be installed on the dedicated `WireGuard server` server. Where you have [WSTunnel](https://github.com/erebe/wstunnel/) installed on a [Raspberry Pi](https://www.raspberrypi.com/products/raspberry-pi-3-model-b/) and [WireGuard](https://www.wireguard.com/) configured on a [Mikrotik router](https://mikrotik.com/products/group/ethernet-routers) the `--restrictTo=` parameter should be the IPv4 address of your [Mikrotik router](https://mikrotik.com/products/group/ethernet-routers) and the port that [WireGuard](https://www.wireguard.com/) is configured to listen on.
+The `--restrictTo=` parameter above is correct for the case where [WSTunnel](https://github.com/erebe/wstunnel/) and [WireGuard](https://www.wireguard.com/) are going to be installed on the dedicated `WireGuard server` server.
 
-In another shell on the same the `WireGuard server` Linux server I ran `ncat` listening for UDP traffic on port 51820:
+In another shell on the same the `WSTunnel server` Linux server I ran `ncat` listening for UDP traffic on port 51820:
 
 ```console
 ncat -u -l 127.0.0.1 51820
@@ -328,6 +328,14 @@ sudo tcpdump -i eno1 host corporate.proxy
 ```
 
 When that worked I stopped both of the `ncat` processes and both of the `wstunnel` processes with `CTRL-C`.
+
+### Option 2 only - Run WSTunnel on one server and WireGuard on another server
+
+Where I have [WSTunnel](https://github.com/erebe/wstunnel/) installed on a [Raspberry Pi](https://www.raspberrypi.com/products/raspberry-pi-3-model-b/) and I intend to use [WireGuard](https://www.wireguard.com/) configured on a [Mikrotik router](https://mikrotik.com/products/group/ethernet-routers), once I have tested the WSTunnel link I needed to change the `--restrictTo=` parameter to be the IPv4 address of my [Mikrotik router](https://mikrotik.com/products/group/ethernet-routers) and the port that [WireGuard](https://www.wireguard.com/) is configured to listen on - for instance:
+
+```console
+/usr/local/bin/wstunnel -v --server ws://0.0.0.0:8080 --restrictTo=192.168.88.1:51820
+```
 
 ### Install WSTunnel services to create the tunnel between the WireGuard client and WireGuard server
 
