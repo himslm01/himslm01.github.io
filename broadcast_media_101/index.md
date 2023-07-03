@@ -1,3 +1,15 @@
+<!-- himslm01 custom-head.html-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      inlineMath: [['$','$']]
+    }
+  });
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<!-- end himslm01 custom-head.html-->
+
 # Broadcast Media 101
 
 This section is intended as a practical guide to video and audio with a specific focus on aspects pertinent to broadcast situations.
@@ -6,7 +18,7 @@ This section is intended as a practical guide to video and audio with a specific
 
 I have worked in television and radio for more than 35 years and also worked in software development for 15 years - the two time periods partly overlap.
 
-I started my journey into broadcast at a Hospital Radio station, which was a great place to learn. 4 years later I was working at the BBC as a Video Tape operator. Through my career at the BBC I have operated all of the available types of [videotape](https://en.wikipedia.org/wiki/Videotape) machines (2-inch, 1-inch, ¾-inch U-Matic, ½-inch BetaCam formats, 8mm DV formats, ...)and [telecine](https://en.wikipedia.org/wiki/Telecine) machines (Rank-Cintel mark 2 and mark 3), I have mixed audio in radio studios and dubbing theatres, I have edited video in linear tape-to-tape suites and non-linear computer suites (Avid, Quantel, FCP 7 & X, DaVinci Resolve, ...).
+I started my journey into broadcast at a Hospital Radio station, which was a great place to learn. 4 years later I was working at the BBC as a Video Tape operator. Through my career at the BBC I have operated all of the available types of [videotape](https://en.wikipedia.org/wiki/Videotape) machines (2-inch, 1-inch, ¾-inch U-Matic, ½-inch BetaCam formats, 8mm DV formats, ...) and [telecine](https://en.wikipedia.org/wiki/Telecine) machines (Rank-Cintel mark 2 and mark 3), I have mixed audio in radio studios and dubbing theatres, I have edited video in linear tape-to-tape suites and non-linear computer suites (Avid, Quantel, FCP 7 & X, DaVinci Resolve, ...).
 
 Live broadcast is great, but I have also developed software (Java, Python, Perl, ...), architected and build Internet Services, and architected software systems involving broadcast systems integrations and broadcast media generation and transcoding.
 
@@ -58,11 +70,14 @@ In NTSC analogue TV the timings are similar - with nearly $ 1 \over 5 $ th of ea
 
 ## Flashing displays
 
-In usual analogue movie film capture, one complete frame is taken 24 times a second. When the finished film is displayed in a movie theatre, each frame needs to be displayed - so light is shone through the frame of film, then a shutter blocks the light, the frame is moved, and the light is shone through the film again. But, that 24 times per second the flicker rate looks horrible. So instead light is shone through the same frame twice before the film is moved to the next frame, doubling the flicker rate up to 48 times per second, which is above the rate that the average human eye can detect significant flicker.
+In usual analogue movie film capture, one complete frame is captured 24 times a second. When the finished film is displayed in a movie theatre, each frame needs to be displayed. Light is shone through a frame of film, then a shutter blocks the light, the film is moved, and the light is shone through the the next frame of the film. That would result in 24 flashes of light per second.
 
-For analogue television the same problem exists. Televisions cannot flicker 25 times per second, they need to flicker at twice that rate. This was achieved by scanning and displaying every other line in each pass. The analogue camera scans, and the analogue TV displays, lines 1, 3, 5, 7, ... in one $ 1 \over 50 $ th of a second, then scans and displays lines 2, 4, 6, 8, ... in the next $ 1 \over 50 $ th of a second. Human brains cope with that trick, the resolution reduction are made-up in the brain, and the flicker is not usually noticeable.
+For most humans, when the flash rate is below about 35 flashes per second they will notice a significant flicker. So instead of shining light through each frame once, light is shone through the same frame twice before the film is moved onto the next frame, doubling the flashing rate up to 48 times per second, which is nicely above the rate most humans will notice a significant flicker.
+
+For analogue television the same problem exists. Televisions must not flicker 25 times per second, they need to flicker at twice that rate. This was achieved by scanning and displaying every other line in each pass. The analogue camera scans, and the analogue TV displays, lines 1, 3, 5, 7, ... in one $ 1 \over 50 $ th of a second, then scans and displays lines 2, 4, 6, 8, ... in the next $ 1 \over 50 $ th of a second. Human brains cope with that trick, the resolution reduction are made-up in the brain, and the flicker is not usually noticeable.
 
 
+(this next section does not live here!)
 ## Specifications of analogue PAL
 
 To get into a little bit of maths - each line of analogue PAL (and SECAM) is 64 microseconds ( $ 1 \div 25 \div 625 = 0.000064 $ ) of which 52 microseconds can be used for picture information, the rest is used for "flyback" to get the scanning point back to the start. In analogue video that "flyback" time is used to send timing pulses which ensure TVs are scanning in sync with the camera.
