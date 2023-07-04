@@ -52,7 +52,7 @@ In this document I will use some shorthand notation of common terms.
 
 It is important to remember that television and film are fundamentally different in the method that they capture pictures.
 
-In analogue moving film capture, a very fast moving shutter opens to expose a whole frame of film for a period of time (often for around a $ 1 \over 20 $ th of a second). The frame of film captures everything in the camera's view, then the shutter closes and the next frame film is dragged into position. Repeat 24 times a second and you have a blockbuster film on your hands.
+In analogue moving film capture, a very fast moving shutter opens to expose a whole frame of film for a period of time (often for around a $ 1 \over 50 $ th of a second). The frame of film captures everything in the camera's view, then the shutter closes and the next frame film is dragged into position. Repeat 24 times a second and you have a blockbuster film on your hands.
 
 Analogue television is very different.
 
