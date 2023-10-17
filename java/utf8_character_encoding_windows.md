@@ -4,7 +4,7 @@
 
 Below I will use a common library which converts HTML entities into their UTF-8 character, and I will create a unit test to confirm that the library is doing the correct job.
 
-I am only going to focus on the HTML entity `&pound;`, which should be converted into the character `£`
+I am only going to focus on the HTML entity `&pound;`, which should be converted into the character `£`.
 
 I'm going to use Microsoft Visual Studio Code running on Windows to edit the source code.
 
@@ -62,27 +62,27 @@ If I run the test in VSCode it fails - which is unexpected.
 
 ![Test fails](../assets/images/java/utf8_character_encoding_windows_vscode_debug_wrong.png)
 
-Looking carefully at the text in the "Actual" column you can see that the conversion from the HTML entity `&pound;` to the character `£` worked. The failure is because the text in the "Expected" is the two characters `Â£` not the single `£` character I had in the source code.
+Looking carefully at the text in the "Actual" column you can see that the conversion from the HTML entity `&pound;` to the character `£` worked. The failure is because the text in the "Expected" is the two characters `Â£` not the single `£` character that I had in the source code.
 
 ## Why the two characters `Â£` ?
 
 In the [Windows Code Page 1252](https://en.wikipedia.org/wiki/Windows-1252) the `Â` character is composed of the hex byte `0xc2`, and the `£` character is composed of the hex byte`0xa3`.
 
-In [UTF-8](https://www.charset.org/utf-8) `£` character is composed of two hex bytes `0xc2 0xa3` - the same hex bytes as the two characters `Â£`.
+In [UTF-8](https://www.charset.org/utf-8) `£` character is composed of two hex bytes `0xc2 0xa3` - the same hex bytes as the two characters `Â£` in Windows Code Page 1252.
 
-### On Windows the Java compiler assumes Java source code text is encoded using Windows Code Page 1252
+### On Windows, the Java compiler assumes Java source code text is encoded using Windows Code Page 1252
 
 The Java compiler `javac` has assumed that: since it is compiling on Windows, the source code will be in Windows Code Page 1252. But VSCode is saving the source code in UTF-8.
 
-#### How to fix this
+## How to fix it
 
 There are several simple ways to fix this problem. Only one of them is the correct fix.
 
-##### Save the source file in Windows Code Page 1252
+### Save the source file in Windows Code Page 1252
 
 Implementing this bad fix would be terrible for any collaborators working on devices other than Windows - and useless if you had pulled the code from a Git repository where all of the files are stored in UTF-8.
 
-##### Change the source code
+### Change the source code
 
 Implementing this bad fix would result in you having to use unicode entities in your source code - using `\u00A3` instead of the `£` character in the source code.
 
@@ -95,7 +95,7 @@ Implementing this bad fix would result in you having to use unicode entities in 
 
 I should hope that it's clear why changing your source code so that every UTF-8 character that is not directly mapped into the Windows Code Page 1252 is written as its unicode entity is a bad thing.
 
-##### Configure Gradle
+### Configure Gradle
 
 The correct fix is to tell Gradle to tell the Java Compiler `javac` to ignore it's assumption that the source code is in Windows Code Page 1252, and instead tell the Java Compiler `javac` that the source code is in UTF-8.
 
