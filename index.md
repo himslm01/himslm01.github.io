@@ -14,3 +14,7 @@
     - [Migrate an ESXi VM to Harvester](virtualisation/harvester/migrate_esxi_to_harvester)
 - VPN
   - [Web-Socket tunnel carrying WireGuard](VPN/wstunnel_wireguard)
+
+## Blog Posts
+
+- [2023-10-15 UTF-8 Character Encoding in Java on Windows](java/utf8_character_encoding_windows.md)
