@@ -1,18 +1,18 @@
 # UTF-8 Character Encoding in Java on Windows
 
-## The problems that exist
+## The problem
 
 Below I will use a common library which converts HTML entities into their UTF-8 character, and I will create a unit test to confirm that the library is doing the correct job.
 
-I am only going to focus on the HTML entity `&pound;`, which should be converted into the UTF-8 character `£`
+I am only going to focus on the HTML entity `&pound;`, which should be converted into the character `£`
 
 I'm going to use Microsoft Visual Studio Code running on Windows to edit the source code.
 
-I have created a simple project in VSCode on Windows, and ensured that I'm creating UTF-8 files with LF only line endings - just as I might on other platforms.
+I have created a simple project in VSCode on Windows, and ensured that I am saving the source files as UTF-8 with LF only line endings - just as I might on other platforms.
 
 ![VSCode on Windows](../assets/images/java/utf8_character_encoding_windows_vscode.png)
 
-The code in `TestHTMLEntity.java` is very simple - just one assert in a test which is using a method in Apache's `commons-text` library to test the conversion of the HTML entity into its UTF-8 representation.
+The code in `TestHTMLEntity.java` is very simple - just one assert in a test which is using a method in Apache's `commons-text` library to test the conversion of the HTML entity into its character representation.
 
 ```java
 import static org.junit.Assert.assertEquals;
@@ -58,13 +58,13 @@ dependencies {
 }
 ```
 
-If I run the test in VSCode it fails - which is unexpected.because it fails in a
+If I run the test in VSCode it fails - which is unexpected.
 
 ![Test fails](../assets/images/java/utf8_character_encoding_windows_vscode_debug_wrong.png)
 
 Looking carefully at the text in the "Actual" column you can see that the conversion from the HTML entity `&pound;` to the character `£` worked. The failure is because the text in the "Expected" is the two characters `Â£` not the single `£` character I had in the source code.
 
-Why the two characters `Â£` ?
+## Why the two characters `Â£` ?
 
 In the [Windows Code Page 1252](https://en.wikipedia.org/wiki/Windows-1252) the `Â` character is composed of the hex byte `0xc2`, and the `£` character is composed of the hex byte`0xa3`.
 
@@ -76,7 +76,7 @@ The Java compiler `javac` has assumed that: since it is compiling on Windows, th
 
 #### How to fix this
 
-There are several simple ways to fix this problem.
+There are several simple ways to fix this problem. Only one of them is the correct fix.
 
 ##### Save the source file in Windows Code Page 1252
 
@@ -93,7 +93,7 @@ Implementing this bad fix would result in you having to use unicode entities in 
     }
 ```
 
-I should hope that it's clear why changing every UTF-8 character your code that is not directly mapped into the Windows Code Page 1252 into its unicode escape sequence is a bad thing.
+I should hope that it's clear why changing your source code so that every UTF-8 character that is not directly mapped into the Windows Code Page 1252 is written as its unicode entity is a bad thing.
 
 ##### Configure Gradle
 
