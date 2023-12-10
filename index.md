@@ -3,6 +3,8 @@
 ## Index
 
 - [About me](about_me)
+- Blackmagic Design DaVinci Resolve
+  - [Installing DaVinci Resolve on OpenSuse Tumbleweed](BlackmagicDesign_DaVinciResolve/install_DaVinciResolve_on_OpenSuse_Tumbleweed.md)
 - FFmpeg
   - [Using Decklink devices](FFmpeg/using_decklink_devices)
 - Kubernetes
