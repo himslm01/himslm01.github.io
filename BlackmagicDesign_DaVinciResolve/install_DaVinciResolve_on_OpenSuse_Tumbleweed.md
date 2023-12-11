@@ -17,7 +17,7 @@ cd DaVinci_Resolve_Studio_18.6.4_Linux
 SKIP_PACKAGE_CHECK=1 ./DaVinci_Resolve_Studio_18.6.4_Linux.run
 ```
 
-* Download the gdk-pixbuf2 package from Fedora
+* Download fedora’s libgdk rpm (see: <https://forums.opensuse.org/t/davinci-resolve-18-5-not-working-on-opensuse-tumbleweed/167175/14>)
 
 ```console
 curl -O https://dl.fedoraproject.org/pub/fedora/linux/releases/38/Everything/x86_64/os/Packages/g/gdk-pixbuf2-2.42.10-2.fc38.x86_64.rpm
