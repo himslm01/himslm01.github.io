@@ -8,6 +8,7 @@
 - FFmpeg
   - [Using Decklink devices](FFmpeg/using_decklink_devices)
 - Kubernetes
+  - [Installing a High Available K3s cluster](kubernetes/k3s/deploying_ha_cluster.md)
   - [Upgrade k3s to v1.22 where Træfik v1 is not compatible](kubernetes/k3s/upgrading_k3s_to_1.22+)
   - [Run Google's hello-app on k3s using TLS with Træfik](kubernetes/k3s/run_googles_hello-app)
   - [Rancher Desktop](kubernetes/rancher_desktop/index)
