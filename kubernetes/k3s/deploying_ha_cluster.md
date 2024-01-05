@@ -124,8 +124,3 @@ with:
 ```
 
 And finally deploy that file into `/var/lib/rancher/k3s/server/manifests/kube-vip-cloud-controller.yaml`.
-<!---
-## Terraform and Cloud Init
-
-## Terraform and Ansible
--->
