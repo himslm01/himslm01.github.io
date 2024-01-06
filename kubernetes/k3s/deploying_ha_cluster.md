@@ -144,6 +144,10 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" sh -s -
 
 You must wait for this K3s service to be up, kube-vip to be installed and advertising the control-plane on TCP port 6443 of the `${YOUR_VIP_ADDRESS}`, and the DNS for `${YOUR_VIP_HOSTNAME}` to be available before you move on to install any other nodes.
 
+```bash
+while ! curl --insecure --max-time 2 https://${YOUR_VIP_HOSTNAME}:6443; do sleep 2; done
+```
+
 ### All future server nodes
 
 The installation of all future server (and agent) nodes needs to refer to the HA control-plane of this cluster. We do that by including the `--server` parameter in the k3s install script.
