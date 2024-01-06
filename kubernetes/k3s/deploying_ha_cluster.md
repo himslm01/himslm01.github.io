@@ -2,7 +2,7 @@
 
 Using [Kube-Vip](https://kube-vip.io/) and [K3s](https://k3s.io/) together is an easy way to make a Highly Available Kubernetes cluster. This document describes how I achieved this, and includes my advice for automating the build and deploy process.
 
-## Create config files
+## Create configuration files
 
 The best way to install K3s with Kube-vip is to make some config files up-front and deploy them with an automation system. I have used both cloud-config cloudinit files from a Terraform template and Ansible to deploy these config files. Implementing it all in cloud-config goes against the ethos of using cloud-config for configuring a host, so I advise creating these files using a software deployment tool like Ansible.
 
@@ -33,7 +33,8 @@ write-kubeconfig-mode: "0644"
 tls-san:
   - "${YOUR_VIP_ADDRESS}"
   - "${YOUR_VIP_HOSTNAME}"
-# disable:
+disable:
+  - "servicelb"
 #   - "traefik"
 ```
 
@@ -124,3 +125,31 @@ with:
 ```
 
 And finally deploy that file into `/var/lib/rancher/k3s/server/manifests/kube-vip-cloud-controller.yaml`.
+
+## Installing K3s
+
+Having created the K3s configuration files, as above, I use the standard [K3s install script](https://docs.k3s.io/quick-start) with some further overriding parameters to install K3s.
+
+### The first node in a cluster
+
+The first node in a cluster will be a server node. It needs to boot-strap the cluster and will startup kube-vip to make the HA control-plane available for all future server and agent nodes in the cluster to communicate with.
+
+Because the file `/etc/rancher/k3s/config.yaml` has been created containing all of the default parameters, all we have to do is to tell the installer that this is a server node.
+
+```bash
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" sh -s -
+```
+
+### Wait for the HA control-plane to be available
+
+You must wait for this K3s service to be up, kube-vip to be installed and advertising the control-plane on TCP port 6443 of the `${YOUR_VIP_ADDRESS}`, and the DNS for `${YOUR_VIP_HOSTNAME}` to be available before you move on to install any other nodes.
+
+### All future server nodes
+
+The installation of all future server (and agent) nodes needs to refer to the HA control-plane of this cluster. We do that by including the `--server` parameter in the k3s install script.
+
+**Note that if you need to replace the first node in the cluster you will need to use this command, because the cluster has already been boot-strapped and the HA control-plane is already available.**
+
+```bash
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --server https://${YOUR_VIP_HOSTNAME}:6443" sh -s -
+```
