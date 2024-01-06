@@ -164,10 +164,12 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --server https://${YOUR_
 
 I have deployed an HA cluster of three server nodes, each of which can also run workloads, using Terraform. I chose to deploy 3 Ubuntu 22.04 server VMs, and included all of the configuration files and the scripts to install K3s in [cloud-init ](https://cloud-init.io/) cloud config files.
 
-Installing this way has the disadvantage that you must deploy the first VM, with the first server node, on its own. You must wait until the HA control-plane is available before you can start to deploy the other VMs.
+Installing this way has the disadvantage that you must deploy the first VM, with the first K3s server node, on its own. You must wait until the HA control-plane is available on that VM before you can start to deploy the other VMs with the other server (or agent) nodes.
 
-I believe it is better to deploy the VMs with minimum configuration then using another automation tool to deploy K3s.
+This will work well for many Infrastructure as a Service environments, but for others I believe it may be better to deploy the VMs Terraform use another automation tool to deploy K3s.
 
 ### Deploying using Terraform and Ansible
 
-I would suggest setting the IP addresses and hostnames, deploying the sysctl configuration, creating standard users with their SSH keys, and installing dependent packages - like `nfs-common` and your VM providor's guest tools - using Terraform and cloud-init, and then deploying the K3s cluster onto those nodes using Ansible.
+I would suggest using Terraform and cloud-init to set the IP addresses and hostnames, deploy the sysctl configuration, create standard users with their SSH keys, and install dependent packages - like `nfs-common` and your VM provider's guest tools.
+
+When the nodes are available I suggest deploying the K3s cluster onto those nodes using Ansible.
