@@ -44,9 +44,9 @@ If you have a local Docker mirror:
 
 ```yaml
 mirrors:
-docker.io:
-  endpoint:
-    - "https://your.local.mirror"
+  docker.io:
+    endpoint:
+      - "https://your.local.mirror"
 ```
 
 ### Kube-vip - for K3s HA
