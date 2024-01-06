@@ -87,13 +87,13 @@ docker run \
 
 Edit `kube-vip.yaml` to replace:
 
-```yalm
+```yaml
           imagePullPolicy: Always
 ```
 
 with:
 
-```yalm
+```yaml
           imagePullPolicy: IfNotPresent
 ```
 
@@ -107,20 +107,20 @@ Get the Kube-vip cloud-controller manifests into a file called `kube-vip-cloud-c
 
 ```bash
 curl -sL \
-  -o cloudinit-4_kube-vip-cloud-controller.yaml \
+  -o kube-vip-cloud-controller.yaml \
   "https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml"
 
 ```
 
 Edit `kube-vip-cloud-controller.yaml` to replace:
 
-```yalm
+```yaml
           imagePullPolicy: Always
 ```
 
 with:
 
-```yalm
+```yaml
           imagePullPolicy: IfNotPresent
 ```
 
