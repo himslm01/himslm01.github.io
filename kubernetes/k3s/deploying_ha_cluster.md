@@ -162,7 +162,7 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --server https://${YOUR_
 
 ### Deploying using Terraform
 
-I have deployed an HA cluster of three server nodes, each of which can also run workloads, using Terraform. I chose to deploy 3 Ubuntu 22.04 server VMs, and included all of the configuration files and the scripts to install K3s in [cloud-init ](https://cloud-init.io/) cloud config files.
+I have deployed an HA cluster of three server nodes, each of which can also run workloads, using Terraform. I chose to deploy 3 Ubuntu 22.04 server VMs, and included all of the configuration files and the scripts to install K3s in [cloud-init](https://cloud-init.io/) cloud config files.
 
 Installing this way has the disadvantage that you must deploy the first VM, with the first K3s server node, on its own. You must wait until the HA control-plane is available on that VM before you can start to deploy the other VMs with the other server (or agent) nodes.
 
