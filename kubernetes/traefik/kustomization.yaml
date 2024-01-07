@@ -1,0 +1,31 @@
+namespace: default
+resources:
+  - whoami.yaml
+patches:
+  - target:
+      group: traefik.io
+      version: v1alpha1
+      kind: IngressRoute
+      name: whoami
+    patch: |
+      - op: replace
+        path: /spec/routes/0/match
+        value: Host(`whoami.lxiv.uk`) && PathPrefix(`/`)
+      - op: replace
+        path: /spec/tls/secretName
+        value: wildcard-lan-lxiv-uk-tls-secret
+  - target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: whoami
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: whoami.lxiv.uk
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: whoami.lxiv.uk
+      - op: replace
+        path: /spec/tls/0/secretName
+        value: wildcard-lan-lxiv-uk-tls-secret

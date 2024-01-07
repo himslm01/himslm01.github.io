@@ -1,0 +1,89 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: whoami
+  labels:
+    app: whoami
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami
+          ports:
+            - name: web
+              containerPort: 80
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: 300m
+            requests:
+              memory: "100Mi"
+              cpu: 1m
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami
+
+spec:
+  ports:
+    - name: web
+      port: 80
+      targetPort: web
+
+  selector:
+    app: whoami
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`whoami.example.com`) && PathPrefix(`/`)
+      services:
+        - kind: Service
+          name: whoami
+          namespace: default
+          port: web
+          passHostHeader: true
+  tls:
+    secretName: whoami-tls
+
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: whoami
+#
+# spec:
+#   tls:
+#     - hosts:
+#       - whoami.example.com
+#       secretName: whoami-tls
+#   rules:
+#   - host: whoami.example.com
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: whoami
+#             port:
+#               name: web
