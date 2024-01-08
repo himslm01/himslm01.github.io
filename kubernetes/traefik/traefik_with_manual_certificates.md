@@ -30,7 +30,7 @@ kubectl create secret tls whoami-tls \
     | kubectl apply -f -
 ```
 
-## Use the certificate
+## Deploy "who am I" app to use the certificate
 
 The following manifest will demonstrate the use of the certificate with a simple [who am I](https://github.com/traefik/whoami) application provided by Træfik, although any other simple HTTP demonstration app can be used as an alternative.
 
@@ -105,7 +105,7 @@ spec:
     secretName: whoami-tls
 ```
 
-This manifest is available to download [here](whoami.yaml). It can be easily reused and adapted, for instance by applying a [Kubernetes kubectl kustomization](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/) file, which might look like this:
+This manifest is available to download [here](whoami/whoami.yaml). It can be easily reused and adapted, for instance by applying a [Kubernetes kubectl kustomization](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/) file, which might look like this:
 
 ```yaml
 namespace: default
@@ -129,7 +129,7 @@ Save that as `kustomization.yaml` into the same folder you saved `whoami.yaml`, 
 kubectl kustomize . | kubectl apply -f -
 ```
 
-The whoami application should be visible at [http://your.host.name](http://your.host.name) - assuming any network configuration to route or NAT to your Træfik *Service* has been applied.
+The whoami application should be visible at `https://your.host.name` - assuming any DNS configuration, and network configuration to route or NAT to your Træfik *Service* has been applied.
 
 ### *Ingress* vs *IngressRoute*
 
@@ -165,3 +165,151 @@ spec:
 ```
 
 Note that Kubernetes have stopped developing any changes to *Ingress* and are developing a new [Gateway API](https://kubernetes.io/docs/concepts/services-networking/gateway/) which Træfik will also support.
+
+## Deploy Google's "hello world" app to use the certificate
+
+As above, the following manifest will demonstrate the use of the certificate with a simple [hello world](https://github.com/GoogleCloudPlatform/kubernetes-engine-samples/tree/main/quickstarts/hello-app) web application provided by Google.
+
+A *Deployment* of the `gcr.io/google-samples/hello-app` image is created, a *Service* is created exposing the deployment internally within the Kubernetes cluster, and two Træfik *IngressRoute*s are created to inform Træfik of the hostname and path on which to expose the web-application - one for http and one for https. The *Secret* is used the https *IngressRoute* for the TLS encryption, and a Træfik *Middleware* is used to redirect all http connections to https.
+
+### Warning
+
+The Google hello-app does not work on arm/v7 or arm64 - it will not work on a Raspberry Pi.
+
+```yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-app
+  labels:
+    app: hello-app
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-app
+  template:
+    metadata:
+      labels:
+        app: hello-app
+    spec:
+      containers:
+        - name: hello-app
+          image: "gcr.io/google-samples/hello-app:1.0"
+          ports:
+            - name: web
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 1000m
+              memory: 128Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-app
+
+spec:
+  selector:
+    app: hello-app
+  ports:
+    - name: web
+      port: 80
+      targetPort: web
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: hello-app-web
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`hello.example.com`) && PathPrefix(`/`)
+      middlewares:
+        - name: "hello-app-redirect"
+      services:
+        # the service will be never called because of the redirect middleware
+        - kind: Service
+          name: hello-app
+          namespace: default
+          port: web
+          passHostHeader: true
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: hello-app-websecure
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`hello.example.com`) && PathPrefix(`/`)
+      middlewares:
+        - name: "hello-app-redirect"
+      services:
+        - kind: Service
+          name: hello-app
+          namespace: default
+          port: web
+          passHostHeader: true
+  tls:
+    secretName: hello-app-tls
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: hello-app-redirect
+
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+```
+
+This manifest is available to download [here](hello-app/hello-app.yaml). As above, it can be easily reused and adapted by applying a Kubernetes kubectl kustomization like this.
+
+```yaml
+namespace: default
+resources:
+  - hello-app.yaml
+patches:
+  - target:
+      group: traefik.io
+      version: v1alpha1
+      kind: IngressRoute
+      name: hello-app-web
+    patch: |
+      - op: replace
+        path: /spec/routes/0/match
+        value: Host(`your.host.name`) && PathPrefix(`/`)
+      - op: replace
+        path: /spec/routes/0/services/0/namespace
+        value: default
+  - target:
+      group: traefik.io
+      version: v1alpha1
+      kind: IngressRoute
+      name: hello-app-websecure
+    patch: |
+      - op: replace
+        path: /spec/routes/0/match
+        value: Host(`your.host.name`) && PathPrefix(`/`)
+      - op: replace
+        path: /spec/routes/0/services/0/namespace
+        value: default
+```
+
+The hello-app application should be visible at  to `http://<your.host.name>` or `https://<your.host.name>`. If you went to `http` then your browser will be redirected to `https` and you'll securely see the hello app.

@@ -1,0 +1,126 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-app
+  labels:
+    app: hello-app
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-app
+  template:
+    metadata:
+      labels:
+        app: hello-app
+    spec:
+      containers:
+        - name: hello-app
+          image: "gcr.io/google-samples/hello-app:1.0"
+          ports:
+            - name: web
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 1000m
+              memory: 128Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-app
+
+spec:
+  selector:
+    app: hello-app
+  ports:
+    - name: web
+      port: 80
+      targetPort: web
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: hello-app-web
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`hello.example.com`) && PathPrefix(`/`)
+      middlewares:
+        - name: "hello-app-redirect"
+      services:
+        # the service will be never called because of the redirect middleware
+        - kind: Service
+          name: hello-app
+          namespace: default
+          port: web
+          passHostHeader: true
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: hello-app-websecure
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`hello.example.com`) && PathPrefix(`/`)
+      middlewares:
+        - name: "hello-app-redirect"
+      services:
+        - kind: Service
+          name: hello-app
+          namespace: default
+          port: web
+          passHostHeader: true
+  tls:
+    secretName: hello-app-tls
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: hello-app-redirect
+
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: hello-app
+#   namespace: hello-app
+#   annotations:
+#     kubernetes.io/ingress.class: traefik
+#     traefik.ingress.kubernetes.io/router.middlewares: hello-app-redirect@kubernetescrd
+# spec:
+#   rules:
+#     - host: hello.example.com
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: hello-app
+#                 port:
+#                   name: http
+#   tls:
+#   - hosts:
+#     - hello.example.com
+#     secretName: tls-secret

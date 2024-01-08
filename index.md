@@ -11,7 +11,6 @@
   - The K3s distribution
     - [Installing a High Available K3s cluster](kubernetes/k3s/deploying_ha_cluster.md)
     - [Upgrade k3s to v1.22 where Træfik v1 is not compatible](kubernetes/k3s/upgrading_k3s_to_1.22+)
-    - [Run Google's hello-app on k3s using TLS with Træfik](kubernetes/k3s/run_googles_hello-app)
   - Træfic proxy
     - [Deploying Træfik](kubernetes/traefik/traefik_deployment_and_patching.md)
     - [Exposing an app using Træfik Proxy with manually configured TLS certificates](kubernetes/traefik/traefik_with_manual_certificates.md)

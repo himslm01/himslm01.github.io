@@ -12,6 +12,9 @@ patches:
         path: /spec/routes/0/match
         value: Host(`whoami.lxiv.uk`) && PathPrefix(`/`)
       - op: replace
+        path: /spec/routes/0/services/0/namespace
+        value: default
+      - op: replace
         path: /spec/tls/secretName
         value: wildcard-lan-lxiv-uk-tls-secret
   - target:
