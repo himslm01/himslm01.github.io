@@ -2,7 +2,7 @@
 
 These examples assume that [Træfik proxy](https://traefik.io/traefik/) is installed and is fully functional, probably using the [install Traefik using the helm chart](https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart) instructions. Do not just follow the [quick start with Kubernetes](https://doc.traefik.io/traefik/getting-started/quick-start-with-kubernetes/) instructions as that does not provide a fully functional Træfik install.
 
-## Manually add a certificate as a secret
+## Manually add a certificate as a *Secret*
 
 Using most TLS certificate authorities will result in having a **private key** file and a **certificate** file. When using the ACME protocol, for instance with LetsEncrypt, the process ends up with four files in a folder - the files `privkey.pem` and `fullchain.pem` are the two required files.
 
@@ -32,7 +32,7 @@ kubectl create secret tls whoami-tls \
 
 ## Use the certificate
 
-The following manifest will demonstrate the use of the certificate in a simple [who am I](https://github.com/traefik/whoami) application provided by Træfik, although any other simple HTTP demonstration app can be used as an alternative.
+The following manifest will demonstrate the use of the certificate with a simple [who am I](https://github.com/traefik/whoami) application provided by Træfik, although any other simple HTTP demonstration app can be used as an alternative.
 
 A *Deployment* of the `traefik/whoami` image is created, a *Service* is created exposing the deployment internally within the Kubernetes cluster, and Træfik *IngressRoute* is created to inform Træfik of the hostname and path on which to expose the web-application, and which *Secret* to use containing the private key and certificate for the TLS encryption.
 
@@ -129,7 +129,7 @@ Save that as `kustomization.yaml` into the same folder you saved `whoami.yaml`, 
 kubectl kustomize . | kubectl apply -f -
 ```
 
-The whoami application should be visible at [http://your.host.name](http://your.host.name) - assuming any network configuration to route or NAT to your Træfik serveice has been applied.
+The whoami application should be visible at [http://your.host.name](http://your.host.name) - assuming any network configuration to route or NAT to your Træfik *Service* has been applied.
 
 ### *Ingress* vs *IngressRoute*
 

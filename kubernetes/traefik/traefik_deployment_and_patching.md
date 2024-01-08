@@ -18,3 +18,25 @@ Note: if you do not have Helm installed but you do have Docker installed, this i
 ```bash
 alias helm="docker run -it --rm -w $PWD -v $PWD:$PWD -v $HOME/.kube/config:/root/.kube/config -v $HOME/.helm:/root/.helm -v $HOME/.config/helm:/root/.config/helm -v $HOME/.cache/helm:/root/.cache/helm alpine/helm:3.13.3"
 ```
+
+## Giving the Træfik *Service* an External IP address
+
+The Træfik *Service* is of type *LoadBalancer* so the *Service* needs a cloud controller to assign it an IP address. In my homelab I use Kube-vip, and Kube-vip's cloud controller can directly assign an IP address when the *spec.loadBalancerIP* is set.
+
+### Add a loadBalancer IP
+
+```bash
+kubectl patch svc traefik \
+  --context=devkube \
+  --namespace=kube-system \
+  -p '{"spec": {"loadBalancerIP": "10.11.12.13"}}'
+```
+
+### Add a loadBalancer IP add add the Træfik dashboard
+
+```console
+kubectl patch svc traefik  \
+  --context=devkube \
+  --namespace=kube-system \
+  -p '{"spec":{"loadBalancerIP": "10.11.12.13","ports": [{"port": 9000,"protocol":"TCP","name":"traefik", "targetPort":"traefik"}]}}'
+```
