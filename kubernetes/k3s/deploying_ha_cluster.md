@@ -27,9 +27,11 @@ kernel.keys.root_maxbytes=25000000
 The majority of K3s' install configuration, leaving only a couple of node-based parameters which will be in the K3s install script.
 
 ```yaml
-cluster-init: true
 token: "SECRET_TOKEN"
 write-kubeconfig-mode: "0644"
+cluster-cidr: "10.1.0.0/16"
+service-cidr: "10.2.0.0/18"
+flannel-backend: "wireguard-native"
 tls-san:
   - "${YOUR_VIP_ADDRESS}"
   - "${YOUR_VIP_HOSTNAME}"
@@ -137,7 +139,7 @@ The first node in a cluster will be a server node. It needs to boot-strap the cl
 Because the file `/etc/rancher/k3s/config.yaml` has been created containing all of the default parameters, all we have to do is to tell the installer that this is a server node.
 
 ```bash
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" sh -s -
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --cluster-init" sh -s -
 ```
 
 ### Wait for the HA control-plane to be available
