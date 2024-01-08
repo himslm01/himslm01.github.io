@@ -6,9 +6,9 @@ These examples assume that [Træfik proxy](https://traefik.io/traefik/) is insta
 
 Using most TLS certificate authorities will result in having a **private key** file and a **certificate** file. When using the ACME protocol, for instance with LetsEncrypt, the process ends up with four files in a folder - the files `privkey.pem` and `fullchain.pem` are the two required files.
 
-A Kubernetes **tls secret** manifest file must be created and applied to the correct namespace in your cluster.
+A Kubernetes **tls *Secret*** manifest file must be created and applied to the correct namespace in your cluster.
 
-This command will create a Kubernetes tls secret, but it **will not** replace a certificate when it already exists.
+This command will create a Kubernetes tls *Secret*, but it **will not** replace a certificate when it already exists.
 
 ```bash
 kubectl create secret tls ${NAME_OF_SECRET} \
@@ -17,9 +17,9 @@ kubectl create secret tls ${NAME_OF_SECRET} \
     --cert etc/live/lxiv.uk/fullchain.pem
 ```
 
-The `kubectl apply` command **will** replace a menifest which is already deployed, so a better form of `kubectl` command is to create the manifest locally, by using the `--dry-run=client -o yaml` command line switches, and pipe that manifest directly into a `kubectl apply` command.
+The `kubectl apply` command **will** replace a manifest which is already deployed, so a better form of `kubectl` command is to create the manifest locally, by using the `--dry-run=client -o yaml` command line switches, and pipe that manifest directly into a `kubectl apply` command.
 
-For example - this will create a secret named `whoami-tls` in the `default` namespace - assuming you correctly set the path to the `privkey.pem` and `fullchain.pem` files.
+For example - this will create a *Secret* named `whoami-tls` in the `default` namespace - assuming you correctly set the path to the `privkey.pem` and `fullchain.pem` files.
 
 ```bash
 kubectl create secret tls whoami-tls \
@@ -34,7 +34,7 @@ kubectl create secret tls whoami-tls \
 
 The following manifest will demonstrate the use of the certificate in a simple [who am I](https://github.com/traefik/whoami) application provided by Træfik, although any other simple HTTP demonstration app can be used as an alternative.
 
-A `Deployment` of the `traefik/whoami` image is created, a `Service` is created exposing the deployment internally within the Kybernetes cluster, and `Ingress` is created to inform Træfik of the hostname and path on which to expose the web-application, and which secret to use containing the private key and certificate for the TLS encryption.
+A *Deployment* of the `traefik/whoami` image is created, a *Service* is created exposing the deployment internally within the Kubernetes cluster, and Træfik *IngressRoute* is created to inform Træfik of the hostname and path on which to expose the web-application, and which *Secret* to use containing the private key and certificate for the TLS encryption.
 
 ```yaml
 ---
@@ -105,7 +105,7 @@ spec:
     secretName: whoami-tls
 ```
 
-This manifest is available to download [here](whoami.yaml). It can be easily reused and adapted by applying a [Kubernetes kubectl kustomization](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/) file, which might look like this:
+This manifest is available to download [here](whoami.yaml). It can be easily reused and adapted, for instance by applying a [Kubernetes kubectl kustomization](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/) file, which might look like this:
 
 ```yaml
 namespace: default
@@ -131,13 +131,13 @@ kubectl kustomize . | kubectl apply -f -
 
 The whoami application should be visible at [http://your.host.name](http://your.host.name) - assuming any network configuration to route or NAT to your Træfik serveice has been applied.
 
-### Ingress vs IngressRoute
+### *Ingress* vs *IngressRoute*
 
-In my opinion, a worse alternative to using a Træfik specific [IngressRoute](https://doc.traefik.io/traefik/providers/kubernetes-crd/) is using the Kubernetes built-in [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
+In my opinion, a worse alternative to using a Træfik specific [*IngressRoute*](https://doc.traefik.io/traefik/providers/kubernetes-crd/) is using the Kubernetes built-in [*Ingress*](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
-The biggest problem with a Kubernetes Ingress is that the Ingress will apply routes to Træfik's service on both web (TCP port 80 - http) and websecure (TCP port 443 - https) EntryPoints. Which is unlike Træfik's IngressRoute, which binds to specific EntryPoints.
+The biggest problem with a Kubernetes *Ingress* is that the *Ingress* will apply routes to Træfik's service on both web (TCP port 80 - http) and websecure (TCP port 443 - https) *EntryPoints*. Which is unlike Træfik's *IngressRoute*, which binds to specific *EntryPoints*.
 
-Anyway - this is an example using an Ingress which mimics the IngressRoute configuration would look something like this:
+An example using an *Ingress* which mimics the *IngressRoute* configuration might look something like this:
 
 ```yaml
 ---
@@ -164,4 +164,4 @@ spec:
               name: web
 ```
 
-Note that Kubernetes have stopped developing any changes to Ingress and are developing a new [Gateway API](https://kubernetes.io/docs/concepts/services-networking/gateway/) which Træfik will also support.
+Note that Kubernetes have stopped developing any changes to *Ingress* and are developing a new [Gateway API](https://kubernetes.io/docs/concepts/services-networking/gateway/) which Træfik will also support.
