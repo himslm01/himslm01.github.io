@@ -30,7 +30,9 @@ spec:
             requests:
               memory: "100Mi"
               cpu: 1m
-
+      enableServiceLinks: false
+      serviceAccountName: ""
+      automountServiceAccountToken: false
 ---
 apiVersion: v1
 kind: Service

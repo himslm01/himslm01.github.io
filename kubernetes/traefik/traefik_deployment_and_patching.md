@@ -27,16 +27,30 @@ The Træfik *Service* is of type *LoadBalancer* so the *Service* needs a cloud c
 
 ```bash
 kubectl patch svc traefik \
-  --context=devkube \
   --namespace=kube-system \
   -p '{"spec": {"loadBalancerIP": "10.11.12.13"}}'
 ```
 
 ### Add a loadBalancer IP add add the Træfik dashboard
 
-```console
+```bash
 kubectl patch svc traefik  \
-  --context=devkube \
   --namespace=kube-system \
   -p '{"spec":{"loadBalancerIP": "10.11.12.13","ports": [{"port": 9000,"protocol":"TCP","name":"traefik", "targetPort":"traefik"}]}}'
 ```
+
+## Using Local externalTrafficPolicy with the Træfik *Service*
+
+Where a load balancer is external to the Kubernetes Cluster, like in many cloud services, Træfik may not be presented with the public IP address of the original client. Depending on the load balancer and the protocols involved, the public IP address of the original client may be passed in an HTTP header.
+
+When the load balancer is within the Kubernetes cluster, like when using Kube-vip or MetalLB, the Træfik *Service* can be configured so that the public IP address of the client should be available to Træfik, and Træfik can make that IP address available in HTTP headers to the applications it routes to.
+
+The trick to make Træfik see the public IP address of the original client is to set the *externalTrafficPolicy* to the value *Local*.
+
+```bash
+kubectl patch svc traefik \
+  --namespace=kube-system \
+  -p '{"spec":{"externalTrafficPolicy":"Local"}}'
+```
+
+See the [Kubernetes documentation](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip) for more information and caveats.

@@ -68,6 +68,7 @@ spec:
             requests:
               memory: "100Mi"
               cpu: 1m
+      enableServiceLinks: false
 
 ---
 apiVersion: v1
@@ -209,6 +210,7 @@ spec:
             limits:
               cpu: 1000m
               memory: 128Mi
+      enableServiceLinks: false
 
 ---
 apiVersion: v1
