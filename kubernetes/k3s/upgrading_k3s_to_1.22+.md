@@ -1,4 +1,4 @@
-# Upgrading k3s to >= 1.22
+# Upgrading K3s from <1.22 to >= 1.22
 
 ## The problem
 
