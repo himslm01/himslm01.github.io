@@ -9,7 +9,8 @@
   - [Using Decklink devices](FFmpeg/using_decklink_devices)
 - Kubernetes
   - The K3s distribution
-    - [Installing a High Available K3s cluster](kubernetes/k3s/deploying_ha_cluster.md)
+    - [Installing a Highly Available K3s cluster](kubernetes/k3s/deploying_ha_cluster.md)
+    - [Highly Available K3s cluster datastore options](kubernetes/k3s/cluster_database_options.md)
     - [Upgrade k3s to v1.22 where Træfik v1 is not compatible](kubernetes/k3s/upgrading_k3s_to_1.22+)
   - Træfic proxy
     - [Deploying Træfik](kubernetes/traefik/traefik_deployment_and_patching.md)
