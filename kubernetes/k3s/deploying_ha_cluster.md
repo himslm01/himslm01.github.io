@@ -1,4 +1,4 @@
-# Deploying an Highly Available K3s Cluster
+# Deploying a Highly Available K3s Cluster
 
 Using [Kube-Vip](https://kube-vip.io/) and [K3s](https://k3s.io/) together is an easy way to make a Highly Available Kubernetes cluster. This document describes how I achieved this, and includes my advice for automating the build and deploy process.
 
