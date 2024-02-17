@@ -15,6 +15,8 @@ Lets examine the pros and cons of the options.
 
 The classic and well supported method of storing Kubernetes cluster data. The best practice is for the etcd cluster to run on independent hosts who's sole job is running the etc datastore.
 
+![external etcd](K3s_cluster_datastores-external_etcd.png)
+
 The etcd cluster should consist of an odd number of nodes, with three nodes being the minimum for high availability.
 
 Care should be taken to regularly snapshot the data stored in the etcd cluster, and restores of the data should be practised, to a separate cluster, to ensure the procedure is understood.
@@ -24,6 +26,8 @@ This is a good option for a highly available Kubernetes cluster so long as you h
 ## Internal etcd cluster
 
 K3s has the etcd code compiled in, so k3s can [create an etcd cluster](https://docs.k3s.io/datastore/ha-embedded) when the cluster is first initialised.
+
+![internal etcd](K3s_cluster_datastores-internal_etcd.png)
 
 K3s will create the etcd datastore on every server node. Since etcd should consist of an odd number of nodes, with three nodes being the minimum for high availability, there needs to be the same number of Kubernetes server nodes.
 
@@ -39,6 +43,8 @@ This is a good option for development and test clusters. Self-contained HA K3s c
 
 K3s can [create an HA Kubernetes cluster with the cluster date stored in an external SQL database](https://docs.k3s.io/datastore/ha). K3s includes a light-weight shim which replicates the etcd API but stores the data in an external SQL database. To Kubernetes the shim looks just like an etcd server.
 
+![external SQL database](K3s_cluster_datastores-external_database.png)
+
 A Highly Available Kubernetes cluster will require a Highly Available PostgreSQL, MariaDB, or MySQL database with a single HA host address.
 
 This a good option for a Highly Available Kubernetes cluster where Database Administrators can provide and manage the Highly Available databases-as-a-service for the Kubernetes cluster.
@@ -46,6 +52,8 @@ This a good option for a Highly Available Kubernetes cluster where Database Admi
 ## Internal SQLite database
 
 The etcd API shim in K3s can also use SQLite as the SQL database.
+
+![internal SQLite](K3s_cluster_datastores-internal_sqlite.png)
 
 The SQLite database file is stored at `/var/lib/rancher/k3s/server/db/`. [Snapshotting and restoring](https://docs.k3s.io/datastore/backup-restore#backup-and-restore-with-sqlite) the SQLite database is based on copying or restoring the contents of that folder.
 
