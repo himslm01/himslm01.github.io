@@ -1,0 +1,38 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/jekyll
+{
+    "name": "Jekyll",
+    // image or a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+    //"image": "mcr.microsoft.com/devcontainers/jekyll:2-bullseye",
+    "build": {
+        "dockerfile": "Dockerfile"
+     },
+    "containerEnv": {
+    },
+
+    // Features to add to the dev container. More info: https://containers.dev/features.
+    // "features": {},
+
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    // "forwardPorts": [],
+
+    // Uncomment the next line to run commands after the container is created.
+//    "postCreateCommand": "bundle clean --force && jekyll clean && jekyll build",
+    "postCreateCommand": "bundle exec jekyll clean && bundle exec jekyll build",
+    "mounts": [
+        "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind",
+        "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind"
+    ],
+    // Configure tool-specific properties.
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-azuretools.vscode-docker",
+                "richie5um2.vscode-sort-json",
+                "zainchen.json",
+                "donjayamanne.githistory",
+                "davidanson.vscode-markdownlint"
+            ]
+        }
+    }
+}
