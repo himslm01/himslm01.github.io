@@ -61,4 +61,4 @@ This is not an option for a Highly Available Kubernetes cluster. Only one server
 
 This is a good option for development and test clusters, especially where resources are constrained.
 
-Do not let the idea of only having one server node and the cluster data being stored in SQLite put you off. Worker nodes can be added to the cluster and the cluster it can run for many years without incident.
+Do not let the idea of only having one server node and the cluster data being stored in SQLite put you off. Many worker (agent) nodes can be added to the cluster and the cluster can run for many years without incident.
