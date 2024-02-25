@@ -34,12 +34,88 @@ It is important to read the FFmpeg documentation for every command line option t
 
 If you are using a library to create the FFmpeg command line then it is important that you also understand how the library accepts options in order to create the command line correctly.
 
+### Jaffree
+
 For instance, the popular [Jaffree](https://github.com/kokorin/Jaffree) Java FFmpeg command line wrapper has three ways to set command line options.
 
-- global options are added using the `addArgument(...)` and `addArguments(...)` methods on the [FFmpeg class](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/FFmpeg.html)
+- global options are added using methods on the [FFmpeg class](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/FFmpeg.html)
+- input options are added using methods on an implementation of the [Input interface](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/Input.html) via the inheritance through the [BaseInput class](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/BaseInput.html) from the [BaseInOut class](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/BaseInOut.html)
+- output options are added using methods on an implementation of the [Output interface](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/Output.html) via the inheritance through the [BaseOutput class](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/BaseOutput.html) from the [BaseInOut class](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/BaseInOut.html)
 
-- input options are added using the `addArgument(...)` and `addArguments(...)` methods on an implementation of the [Input interface](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/Input.html) via the inheritance through the [BaseInput class](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/BaseInput.html) from the [BaseInOut class](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/BaseInOut.html)
+All three include `addArgument(...)` and `addArguments(...)` methods, which can add generic command line options to the FFmpeg command line. If you don't use the correct `addArgument(...)` method then the command line option may appear in the wrong place in the command line and FFmpeg may not do what you expected.
 
-- output options are added using the `addArgument(...)` and `addArguments(...)` methods on an implementation of the [Output interface](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/Output.html) via the inheritance through the [BaseOutput class](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/BaseOutput.html) from the [BaseInOut class](https://javadoc.io/doc/com.github.kokorin.jaffree/jaffree/latest/com/github/kokorin/jaffree/ffmpeg/BaseInOut.html)
+In addition, the implementations of the `Input` and `Output` interfaces include specific methods for setting options which are available for that class of command line option.
 
-If you don't use the correct `addArgument(...)` method then the command line option may appear in the wrong place in the command line and FFmpeg may not do what you expected.
+### Jaffree example
+
+As an small example, this class will use FFmpeg to read the first 5 seconds of an input file and write two output files; a `.mov` video file with h.264 encoded video and PCM audio at a sample rate of 48kHz, and a `.wav` audio file with the PCM audio at a sample rate of 44.1kHz.
+
+```java
+public class SimpleEncode implements Runnable {
+
+    public static void main(final String[] args) {
+        final Runnable app = new SimpleEncode();
+        app.run();
+    }
+
+    @Override
+    public void run() {
+        FFmpeg.atPath(Path.of("/home/mdsh/bin/"))
+                .addArguments("-loglevel", "debug")
+                .setOverwriteOutput(true)
+                .addInput(getInput())
+                .addOutput(getOutputVideo())
+                .addOutput(getOutputAudio())
+                .execute();
+    }
+
+    private Input getInput() {
+        return UrlInput.fromUrl("input.mp4")
+                .setDuration(5000);
+    }
+
+    private Output getOutputVideo() {
+        return UrlOutput.toUrl("output.mov")
+                .setCodec("v", "libx264")
+                .addArguments("-profile:v", "main")
+                .addArguments("-level:v", "4.1")
+                .addArguments("-crf:v", "18")
+                .setCodec("a", "pcm_s16le")
+                .addArguments("-ar:a", "48000")
+                .addMap(0, "v:0")
+                .addMap(0, "a:0");
+    }
+
+    private Output getOutputAudio() {
+        return UrlOutput.toUrl("output.wav")
+                .disableStream(StreamType.VIDEO)
+                .setCodec("a", "pcm_s16le")
+                .addArguments("-ar:a", "44100")
+                .addMap(0, "a:0");
+    }
+
+}
+```
+
+Complete class is available [here](SimpleEncode.java).
+
+The final command line, as calculated by the Jaffree library but with some added comments, looks like this:
+
+```bash
+ffmpeg \
+`: # Jaffree's default log level` \
+ -loglevel 32 \
+`: # input file options and the input file` \
+ -t 5.000 -i input.mp4 \
+`: # global options` \
+ -y -loglevel debug \
+`: # first output file options and the first output file` \
+ -c:v libx264 -c:a pcm_s16le -profile:v main -level:v 4.1 \
+ -crf:v 18 -ar:a 48000 -map 0:v:0 -map 0:a:0 \
+ output.mov \
+`: # second output file options and the second output file` \
+ -c:a pcm_s16le -ar:a 44100 -vn -map 0:a:0 \
+ output.wav
+```
+
+Personally, I'd prefer that Jaffree output the global options first because that's what the FFmpeg specifications say. But, since global options can appear anywhere in the command line, it doesn't matter.
