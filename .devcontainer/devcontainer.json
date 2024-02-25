@@ -31,8 +31,12 @@
                 "richie5um2.vscode-sort-json",
                 "zainchen.json",
                 "donjayamanne.githistory",
-                "davidanson.vscode-markdownlint"
-            ]
+                "davidanson.vscode-markdownlint",
+                "streetsidesoftware.code-spell-checker"
+            ],
+            "settings": {
+                "cSpell.language": "en-GB"
+            }
         }
     }
 }
