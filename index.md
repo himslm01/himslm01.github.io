@@ -6,6 +6,7 @@
 - Blackmagic Design DaVinci Resolve
   - [Installing DaVinci Resolve on OpenSuse Tumbleweed](BlackmagicDesign_DaVinciResolve/install_DaVinciResolve_on_OpenSuse_Tumbleweed)
 - FFmpeg
+  - [Command line basics](FFmpeg/command_line_basics)
   - [Using Decklink devices](FFmpeg/using_decklink_devices)
 - Kubernetes
   - The K3s distribution
