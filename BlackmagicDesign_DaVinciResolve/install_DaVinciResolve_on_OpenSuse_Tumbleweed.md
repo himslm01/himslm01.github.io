@@ -1,20 +1,20 @@
 # Installing Blackmagic Design DaVinci Resolve Studio on OpenSuse Tumbleweed
 
-Last tested in December 2023 with DaVinci Resolve 18.6.4.
+Last tested in April 2024 with DaVinci Resolve v19.0b1.
 
 * Download the Linux install zip file from <https://www.blackmagicdesign.com/support/family/davinci-resolve-and-fusion>
 
 * Extract the contents of the zip file you downloaded
 
 ```console
-unzip DaVinci_Resolve_Studio_18.6.4_Linux.zip
+unzip DaVinci_Resolve_Studio_19.0b1_Linux.zip
 ```
 
 * Install the package, ignoring the whether all of the prerequisite packages are installed
 
 ```console
-cd DaVinci_Resolve_Studio_18.6.4_Linux
-SKIP_PACKAGE_CHECK=1 ./DaVinci_Resolve_Studio_18.6.4_Linux.run
+cd DaVinci_Resolve_Studio_19.0b1_Linux
+SKIP_PACKAGE_CHECK=1 ./DaVinci_Resolve_Studio_19.0b1_Linux.run
 ```
 
 * Download fedora’s libgdk rpm (see: <https://forums.opensuse.org/t/davinci-resolve-18-5-not-working-on-opensuse-tumbleweed/167175/14>)
