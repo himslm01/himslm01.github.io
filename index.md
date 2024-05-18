@@ -8,6 +8,7 @@
 - FFmpeg
   - [Command line basics](FFmpeg/command_line_basics)
   - [Using Decklink devices](FFmpeg/using_decklink_devices)
+  - [Compiling with NDI](FFmpeg/compiling_with_NDI)
 - Kubernetes
   - The K3s distribution
     - [Installing a Highly Available K3s cluster](kubernetes/k3s/deploying_ha_cluster)

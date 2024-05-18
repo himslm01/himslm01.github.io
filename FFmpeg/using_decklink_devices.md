@@ -1,16 +1,17 @@
 # Using BlackMagic Design Decklink devices with FFmpeg
 
-I build my own versions of FFmpeg. I build both static and shared library versions. MOsst of the time I use the static version, but for this I must use the shared library version, so that it will use the shared BlackMagic Design Decklink shared libraries.
-
-To help me use the shared library version of FFmpeg I have a small shell script I save into `$HOME/bin/ffmpeg_shared`:
+I build my own shared library version of FFmpeg. To help me use the shared library version of FFmpeg I have a small shell script I save into `$HOME/bin/ffmpeg`:
 
 ```bash
 #!/bin/sh
 
-LD_LIBRARY_PATH=$HOME/Source/ff_builder/build/linux_x86_64/ffmpeg_shared/lib/lib/ \
-    $HOME/Source/ff_builder/build/linux_x86_64/ffmpeg_shared/bin/ffmpeg \
-    "$@"
-````
+FFMPEG_PATH=${HOME}/Source/docker-ff_builder/build/linux_x86_64/ffmpeg_shared
+
+${FFMPEG_PATH}/lib/ld-linux-x86-64.so.2 \
+--library-path ${FFMPEG_PATH}/lib/ \
+${FFMPEG_PATH}/bin/ffmpeg \
+"$@"
+```
 
 ## List Decklink sources
 
