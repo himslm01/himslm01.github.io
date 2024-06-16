@@ -10,7 +10,7 @@ I'm going to use Microsoft Visual Studio Code running on Windows to edit the sou
 
 I have created a simple project in VSCode on Windows, and ensured that I am saving the source files as UTF-8 with LF only line endings - just as I might on other platforms.
 
-![VSCode on Windows](../assets/images/java/utf8_character_encoding_windows_vscode.png)
+![VSCode on Windows](vscode.png)
 
 The code in `TestHTMLEntity.java` is very simple - just one assert in a test which is using a method in Apache's `commons-text` library to test the conversion of the HTML entity into its character representation.
 
@@ -60,7 +60,7 @@ dependencies {
 
 If I run the test in VSCode it fails - which is unexpected.
 
-![Test fails](../assets/images/java/utf8_character_encoding_windows_vscode_debug_wrong.png)
+![Test fails](vscode_debug_wrong.png)
 
 Looking carefully at the text in the "Actual" column you can see that the conversion from the HTML entity `&pound;` to the character `£` worked. The failure is because the text in the "Expected" is the two characters `Â£` not the single `£` character that I had in the source code.
 
@@ -115,4 +115,4 @@ tasks.withType(JavaCompile) {
 
 Saving the `build.gradle` file and re-running the test that failed, it now passes.
 
-![Test passes](../assets/images/java/utf8_character_encoding_windows_vscode_debug_right.png)
+![Test passes](vscode_debug_right.png)
