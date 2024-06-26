@@ -3,8 +3,11 @@
 ## Index
 
 - [About me](about_me)
-- Blackmagic Design DaVinci Resolve
-  - [Installing DaVinci Resolve on OpenSuse Tumbleweed](BlackmagicDesign_DaVinciResolve/install_DaVinciResolve_on_OpenSuse_Tumbleweed)
+- Blackmagic Design
+  - DaVinci Resolve
+    - [Installing DaVinci Resolve on OpenSuse Tumbleweed](BlackmagicDesign/DaVinci_Resolve/install_DaVinciResolve_on_OpenSuse_Tumbleweed)
+  - Desktop Video
+    - [Installing Desktop Video on OpenSuse Tumbleweed Kernel 6.8](BlackmagicDesign/Desktop_Video/install_Desktop_Video_on_OpenSuse_Tumbleweed_Kernel_6.8)
 - FFmpeg
   - [Command line basics](FFmpeg/command_line_basics)
   - [Using Decklink devices](FFmpeg/using_decklink_devices)
