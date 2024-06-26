@@ -14,6 +14,7 @@ $ curl -o blackmagic-io-12.8.1a1-001-fix_for_kernel_6.8.zip https://forum.blackm
 ```
 
 * Extract the zip file
+
 ```console
 $ cd /tmp
 $ unzip blackmagic-io-12.8.1a1-001-fix_for_kernel_6.8.zip
