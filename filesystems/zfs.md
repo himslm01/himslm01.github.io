@@ -2,6 +2,8 @@
 
 ## Install on OpenSUSE Tumbleweed
 
+OpenZFS is available for install from a separate repository which needs to be added to OpenSUSE.
+
 ```console
 zypper addrepo https://download.opensuse.org/repositories/filesystems/openSUSE_Tumbleweed/filesystems.repo
 zypper refresh
@@ -9,6 +11,10 @@ zypper install zfs
 ```
 
 For more details see the [OpenSUSE ZFS package](https://software.opensuse.org/download.html?project=filesystems&package=zfs).
+
+## Install on MacOS
+
+Download the appropriate OpenZFS for OSX package for your MacOS version, or the installer containing all of the packages, from [here](https://openzfsonosx.org/wiki/Downloads) and install the appropriate `.pkg` file for your operating system. A reboot is required after the install has completed.
 
 ## Create a pool and a dataset
 
@@ -55,7 +61,7 @@ zpool import usbwd14t
 
 Note that the directories that the datasets are set to mount on must exist on the new host. See the [section below](#creating-directories-on-macos) if you need to create a directory on MacoOS.
 
-### Creating directories on MacOS
+## Creating directories on MacOS
 
 Since I used the directory `/export` on Linux I'm going to need to create that on MacOS.
 
