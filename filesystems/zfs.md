@@ -53,4 +53,42 @@ This zfs disk can now be connected to another host and the pool can be attached 
 zpool import usbwd14t
 ```
 
-Note that the directories that the datasets are set to mount on must exist on the new host.
+Note that the directories that the datasets are set to mount on must exist on the new host. See the [section below](#creating-directories-on-macos) if you need to create a directory on MacoOS.
+
+### Creating directories on MacOS
+
+Since I used the directory `/export` on Linux I'm going to need to create that on MacOS.
+
+Since around 2020 the root partition on MacOS has been read-only. If you need to create a new directory on the root partition then this is the procedure.
+
+1. make a new directory in a writeable area of the filesystem. /System/Volumes/Data/ is a good place:
+
+```console
+mkdir /System/Volumes/Data/export
+```
+
+2. create a new entry in `/etc/synthetic.conf` (if you have to create the file it should be owned by `root`, group `wheel`, and permissions `0644`)
+
+```console
+touch /etc/synthetic.conf
+chown root:wheel /etc/synthetic.conf
+chmod 0644 /etc/synthetic.conf
+printf "export\tSystem/Volumes/Data/export\n" >> /etc/synthetic.conf
+```
+
+3. get the system to read `/etc/synthetic.conf` and create the folder as a symbolic link to the actual folder created in step 1.
+
+The APFS utility tool `apfs.util` should be able to do that for you.
+
+```text
+apfs.util <option>
+   -t  : stitches and creates synthetic objects on root volume group.
+```
+
+So we can use that option.
+
+```console
+/System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
+```
+
+Or reboot the host.
