@@ -15,7 +15,7 @@ Contents:
 
 OpenZFS is available for install from a separate repository which needs to be added to OpenSUSE.
 
-```console
+```text
 zypper addrepo https://download.opensuse.org/repositories/filesystems/openSUSE_Tumbleweed/filesystems.repo
 zypper refresh
 zypper install zfs
@@ -37,19 +37,19 @@ Note that creating pools on USB attached disks is not recommended, due to the po
 
 Find the disk you are after using in the list of disks attached to the host. Best practice is to use the disk ID, because it is consistent across reboots and re-plugs.
 
-```console
+```text
 ls -l /dev/disk/by-id/
 ```
 
 Creating a pool automatically creates a root dataset on that pool. Best practice is to not use the root dataset, therefore set the mount point to the magic value of `none` so that it will not be mounted.
 
-```console
+```text
 zpool create -m none -f usbwd14t usb-WD_Elements_25A3_394D48423242364A-0:0
 ```
 
 Now make a non-root dataset and mount it onto a directory on the filesystem.
 
-```console
+```text
 zfs create usbwd14t/old_disks
 mkdir /export
 zfs set mountpoint=/export/old_disks usbwd14t/old_disks
@@ -57,14 +57,14 @@ zfs set mountpoint=/export/old_disks usbwd14t/old_disks
 
 Or alternatively
 
-```console
+```text
 mkdir /export
 zfs create -o mountpoint=/export/old_disks usbwd14t/old_disks
 ```
 
 Other datasets can be created at the root level or within the dataset just created. For instance, I'll create a dataset within the 'old_disks` dataset and rsync an old disk's contents into it.
 
-```console
+```text
 zfs create usbwd14t/old_disks/segate_500G
 rsync -var /mnt/sdc1 /export/old_disks/segate_500G/
 ```
@@ -75,13 +75,13 @@ rsync -var /mnt/sdc1 /export/old_disks/segate_500G/
 
 To properly unmount a zfs disk you need to un-attach the pool from the current host. This is done with the `zpool export` command.
 
-```console
+```text
 zpool export usbwd14t
 ```
 
 This zfs disk can now be connected to another host and the pool can be attached to the new host. This is done with the `zpool import` command.
 
-```console
+```text
 zpool import usbwd14t
 ```
 
@@ -97,13 +97,13 @@ Since around 2020 the root partition on MacOS has been read-only. If you need to
 
 1. make a new directory in a writeable area of the filesystem. /System/Volumes/Data/ is a good place:
 
-```console
+```text
 mkdir /System/Volumes/Data/export
 ```
 
 2. create a new entry in `/etc/synthetic.conf` (if you have to create the file it should be owned by `root`, group `wheel`, and permissions `0644`)
 
-```console
+```text
 touch /etc/synthetic.conf
 chown root:wheel /etc/synthetic.conf
 chmod 0644 /etc/synthetic.conf
@@ -121,7 +121,7 @@ apfs.util <option>
 
 So we can use that option.
 
-```console
+```text
 /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
 ```
 
@@ -145,7 +145,7 @@ Carefully note the difference between `add` and `attach` - they are very differe
 
 ### 1. make the temporary files
 
-```code
+```text
 $ mkdir ~/tmp_zfs
 $ cd ~/tmp_zfs/
 $ for i in {0..3} ; do truncate -s 10G $i.raw ; done
@@ -158,7 +158,7 @@ $ ls -l
 
 ### 2. make a pool
 
-```code
+```text
 $ sudo zpool create -o ashift=12 tmp_zfs "$(pwd)/0.raw"
 $ sudo zpool status tmp_zfs
   pool: tmp_zfs
@@ -174,7 +174,7 @@ errors: No known data errors
 
 ### 3. mirror the pool (RAID1)
 
-```code
+```text
 $ sudo zpool attach tmp_zfs "$(pwd)/0.raw" "$(pwd)/1.raw"
 $ sudo zpool status tmp_zfs
   pool: tmp_zfs
@@ -199,7 +199,7 @@ Two options: and one drive at a time, or add two drives together.
 
 #### 4.1.1 add single drive
 
-```code
+```text
 $ sudo zpool add -f tmp_zfs "$(pwd)/2.raw"
 mdsh@mdsh01:~/tmp_zfs$ sudo zpool status tmp_zfs
   pool: tmp_zfs
@@ -226,7 +226,7 @@ mismatched replication level: pool uses mirror and new vdev is file
 
 #### 4.1.2 then attach the mirror drive
 
-```code
+```text
 $ sudo zpool attach tmp_zfs "$(pwd)/2.raw" "$(pwd)/3.raw"
 $ sudo zpool status tmp_zfs
   pool: tmp_zfs
@@ -252,7 +252,7 @@ Note how the vdev `mirror-1` has appeared.
 
 It's also possible to remove the redundancy from the mirror.
 
-```code
+```text
 $ sudo zpool detach tmp_zfs  "$(pwd)/3.raw"
 $ sudo zpool status tmp_zfs
   pool: tmp_zfs
@@ -274,7 +274,7 @@ errors: No known data errors
 
 And in some circumstances it's also possible to make the pool smaller again - assuming all the data can fit onto the remaining space, and other assumptions.
 
-```code
+```text
 $ sudo zpool remove tmp_zfs  "$(pwd)/2.raw"
 $ sudo zpool status tmp_zfs
   pool: tmp_zfs
@@ -297,7 +297,7 @@ It might take some time to copy the data from the removed vdev to the remaining 
 
 #### 4.2 add a mirror pair of drives in one go
 
-```code
+```text
 $ sudo zpool add tmp_zfs mirror "$(pwd)/2.raw" "$(pwd)/3.raw"
 $ sudo zpool status tmp_zfs
   pool: tmp_zfs
@@ -321,7 +321,7 @@ Note how the vdev `mirror-2` has appeared.
 
 ### 5. remove the pool
 
-```code
+```text
 $ sudo zpool destroy tmp_zfs
 $ sudo zpool status tmp_zfs
 cannot open 'tmp_zfs': no such pool
