@@ -93,7 +93,7 @@ Note that the directories that the datasets are set to mount on must either exis
 
 Since around 2020 the root partition on MacOS has been read-only.
 
-Since I set the mount points for the pool to be in the the directory `/export` on Linux, I'm going to need to create that on MacOS. Alternate solutions might be to use the `-R` option to set the alternate root for the pool, or use the `-N` option to not automatically mount the datasets in the pool.
+Since I set the mount points for the datasets in the pool to be within the `/export` directory on Linux, I'm going to need to create that on MacOS. Alternate solutions might be to use the `-R` option to set the alternate root for the pool, or use the `-N` option to not automatically mount the datasets in the pool.
 
 If you need to create a new directory on the root partition then this is the procedure.
 
@@ -135,17 +135,21 @@ Or reboot the MacOS machine.
 
 It is possible to start with a single disk pool and later include other disks to make the pool fault tolerant and extend the pool size.
 
-Lets do this for real - only we'll use files instead of disks.
+Lets do this for real - only **we'll use files instead of disks.**
 
 1. make temporary files to be used in the exercise
 1. make a pool using one file only
-1. turn the pool into a mirrored redundant pool (RAID1)
-1. extend the pool (RAID10)
+1. turn the pool into a mirrored pool (RAID1)
+1. extend the pool size (RAID10)
+1. reduce the pool size
+1. destroy the pool
 
 Carefully note the difference between `add` and `attach` - they are very different actions to the pool.
 **Using the wrong verb will be disastrous to your data.**
 
 ### 1. make the temporary files
+
+Make four empty files which we can use as though they were disks.
 
 ```text
 $ mkdir ~/tmp_zfs
@@ -159,6 +163,8 @@ $ ls -l
 ```
 
 ### 2. make a pool
+
+Using one of the files, create a simple pool with one vdev.
 
 ```text
 $ sudo zpool create -o ashift=12 tmp_zfs "$(pwd)/0.raw"
@@ -175,6 +181,8 @@ errors: No known data errors
 ```
 
 ### 3. mirror the pool (RAID1)
+
+Include a second file in the pool to create a mirrored vdev.
 
 ```text
 $ sudo zpool attach tmp_zfs "$(pwd)/0.raw" "$(pwd)/1.raw"
