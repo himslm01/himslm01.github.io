@@ -31,7 +31,7 @@ For more details see the [OpenSUSE ZFS package](https://software.opensuse.org/do
 
 <div id='macos'/>
 
-## Install on MacOS
+### Install on MacOS
 
 Download from [here](https://openzfsonosx.org/wiki/Downloads) the appropriate OpenZFS for OSX package for your MacOS version, or the installer containing all of the packages, and install the appropriate `.pkg` file for your operating system. A reboot is required after the install has completed.
 
