@@ -85,15 +85,17 @@ This zfs disk can now be connected to another host and the pool can be attached 
 zpool import usbwd14t
 ```
 
-Note that the directories that the datasets are set to mount on must exist on the new host. See the [section below](#creating-directories-on-macos) if you need to create a directory on MacoOS.
+Note that the directories that the datasets are set to mount on must either exist already on the new host, or be creatable by the ZFS drivers. For the directories to be creatable means the filesystem cannot be read-only. See the [section below](#macosdirectories) if you need to create a root level directory on MacoOS.
 
 <div id='macosdirectories'/>
 
 ## Creating root level directories on MacOS
 
-Since I used the directory `/export` on Linux I'm going to need to create that on MacOS.
+Since around 2020 the root partition on MacOS has been read-only.
 
-Since around 2020 the root partition on MacOS has been read-only. If you need to create a new directory on the root partition then this is the procedure.
+Since I set the mount points for the pool to be in the the directory `/export` on Linux, I'm going to need to create that on MacOS. Alternate solutions might be to use the `-R` option to set the alternate root for the pool, or use the `-N` option to not automatically mount the datasets in the pool.
+
+If you need to create a new directory on the root partition then this is the procedure.
 
 1. make a new directory in a writeable area of the filesystem. /System/Volumes/Data/ is a good place:
 
