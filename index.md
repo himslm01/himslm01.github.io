@@ -8,6 +8,9 @@
     - [Installing DaVinci Resolve on OpenSuse Tumbleweed](BlackmagicDesign/DaVinci_Resolve/install_DaVinciResolve_on_OpenSuse_Tumbleweed)
   - Desktop Video
     - [Installing Desktop Video on OpenSuse Tumbleweed Kernel 6.8](BlackmagicDesign/Desktop_Video/install_Desktop_Video_on_OpenSuse_Tumbleweed_Kernel_6.8)
+- File systems
+  - [BTRFS](filesystems/btrfs)
+  - [ZFS](filesystems/zfs)
 - FFmpeg
   - [Command line basics](FFmpeg/command_line_basics)
   - [Creating test signal files](FFmpeg/creating_test_signal_files)

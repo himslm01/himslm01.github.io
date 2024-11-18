@@ -6,7 +6,7 @@
   * [Mounting device groups](#build_mount_device_group)
   * [Subvolumes or directories?](#build_device_group_subvolume)
   * [Un-mounting device groups](#build_unmount_device_group)
-  * [Building up to a RAID 10 BTRFS device group](#build_raid10)
+  * [Building up to a RAID 10 device group](#build_raid10)
 * [Subvolumes](#subvolumes)
 
 <div id='device_groups'/>
