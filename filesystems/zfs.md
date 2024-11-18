@@ -6,10 +6,10 @@ Contents:
   * [Install zfs on OpenSUSE Tumbleweed](#tumbleweed)
   * [Install zfs on MacOS](#macos)
 * [Building zfs pools](#build)
-  * [Building up to a zfs RAID10 pool](#raid10)
-* [Create a zfs pool with some datasets on a removable disk](#createpool)
-  * [Transfer the pool to another host](#transferpool)
-  * [Creating root level directories on MacOS](#macosdirectories)
+  * [Building up to a zfs RAID10 pool](#build_raid10)
+* [Create a zfs pool with some datasets on a removable disk](#create_pool)
+  * [Transfer the pool to another host](#create_transfer_pool)
+  * [Creating root level directories on MacOS](#create_macos_directories)
 
 <div id='install'/>
 
@@ -29,17 +29,51 @@ zypper install zfs
 
 For more details see the [OpenSUSE ZFS package](https://software.opensuse.org/download.html?project=filesystems&package=zfs).
 
+#### Tumbleweed won't boot after a kernel upgrade
+
+I have found, on two machines, than after installing zfs and then upgrading the kernel with `zypper dup` the system fails to boot. This seems to be caused by the initramfs failing to be built because the kernel modules for zfs could not be included.
+
+I don't need zfs at boot time on my Tumbleweed systems, so I found the best way to fix the issue is to omit the zfs kernel modules from the initramfs.
+
+Doing this will omit zfs from being build into the initramfs:
+
+```text
+echo 'omit_dracutmodules+=" zfsexpandknowledge zfs "' | sudo tee /etc/dracut.conf.d/skip-zfs.conf
+```
+
+And doing this will build the initramfs for the currently running kernel.
+
+```text
+sudo /usr/bin/dracut -f /boot/initrd-$(uname -r) $(uname -r)
+```
+
+or for a specific kernel:
+
+```text
+sudo /usr/bin/dracut -f /boot/initrd-6.11.7-1-default 6.11.7-1-default
+```
+
 <div id='macos'/>
 
 ### Install on MacOS
 
 Download from [here](https://openzfsonosx.org/wiki/Downloads) the appropriate OpenZFS for OSX package for your MacOS version, or the installer containing all of the packages, and install the appropriate `.pkg` file for your operating system. A reboot is required after the install has completed.
 
+## Pools and filesystems
+
+As will be demonstrated in a moment, one or more devices (or files) can be brought together to create a zfs pool, into which one or more datasets can be stored. A dataset can be a POSIX style filesystem, a block device style volume, or a snapshot of a filesystem or volume.
+
+When a zfs pool is created a root filesystem dataset is created. If you create a zfs pool called `tank` then a zfs filesystem called `tank` will be created in that pool.
+
+Further datasets can be created within a dataset
+
+Within a dataset's metadata there is information about where the dataset will be mounted onto the filesystem. A special mount point of `none` exists to stop a dataset being mounted. In many circumstances the root filesystem dataset is not mounted.
+
 <div id='build'/>
 
 ## Building pools
 
-<div id='raid10'/>
+<div id='build_raid10'/>
 
 ### Building up to a RAID10 pool
 
@@ -248,7 +282,7 @@ $ sudo zpool status tmp_zfs
 cannot open 'tmp_zfs': no such pool
 ```
 
-<div id='createpool'/>
+<div id='create_pool'/>
 
 ## Create a pool on a removable disk with some datasets
 
@@ -288,7 +322,7 @@ zfs create usbwd14t/old_disks/segate_500G
 rsync -var /mnt/sdc1 /export/old_disks/segate_500G/
 ```
 
-<div id='transferpool'/>
+<div id='create_transfer_pool'/>
 
 ## Transfer the pool to another host
 
@@ -306,7 +340,7 @@ zpool import usbwd14t
 
 Note that the directories that the datasets are set to mount on must either exist already on the new host, or be creatable by the ZFS drivers. For the directories to be creatable means the filesystem cannot be read-only. See the [section below](#macosdirectories) if you need to create a root level directory on MacoOS.
 
-<div id='macosdirectories'/>
+<div id='create_macos_directories'/>
 
 ## Creating root level directories on MacOS
 
