@@ -111,7 +111,7 @@ $ ls -l
 Using one of the files, create a simple pool with one vdev.
 
 ```text
-$ sudo zpool create -o ashift=12 tmp_zfs "$(pwd)/0.raw"
+$ sudo zpool create -m none -o ashift=12 tmp_zfs "$(pwd)/0.raw"
 $ sudo zpool status tmp_zfs
   pool: tmp_zfs
  state: ONLINE
@@ -123,6 +123,14 @@ config:
 
 errors: No known data errors
 ```
+
+The command line switches explained:
+
+* `zpool create` create a zfs pool
+* `-m none` do not mount the root dataset anywhere on the filesystem
+* `-o ashift=12` use 4096 byte sectors (might be detected automatically anyway)
+* `tmp_zfs` the name of the pool and the name of the root dataset
+* `"$(pwd)/0.raw"` the name of the file (or files, disk, or disks) to create the pool from
 
 #### 3. mirror the pool (RAID1)
 
@@ -282,6 +290,15 @@ $ sudo zpool status tmp_zfs
 cannot open 'tmp_zfs': no such pool
 ```
 
+## Snapshots and backups
+
+```text
+$ sudo zfs snapshot zpoolmedia/media@20241029T163330
+$ zfs list -t snapshot zpoolmedia/media
+NAME                               USED  AVAIL     REFER  MOUNTPOINT
+zpoolmedia/media@20241029T163330     0B      -     7.19T  -
+```
+
 <div id='create_pool'/>
 
 ## Create a pool on a removable disk with some datasets
@@ -324,7 +341,7 @@ rsync -var /mnt/sdc1 /export/old_disks/segate_500G/
 
 <div id='create_transfer_pool'/>
 
-## Transfer the pool to another host
+### Transfer the pool to another host
 
 To properly unmount a zfs disk you need to un-attach the pool from the current host. This is done with the `zpool export` command.
 
@@ -342,7 +359,7 @@ Note that the directories that the datasets are set to mount on must either exis
 
 <div id='create_macos_directories'/>
 
-## Creating root level directories on MacOS
+### Creating root level directories on MacOS
 
 Since around 2020 the root partition on MacOS has been read-only.
 
