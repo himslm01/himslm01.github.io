@@ -1,21 +1,29 @@
 # WSTunnel and WireGuard
 
+## Use case
+
+**As a** service provider company with a tight firewall,
+**I want** to make a VPN between my company and another company,
+**so that** we can securely exchange data.
+
 ## Overview
 
-In this guide I'm going to demonstrate setting up a [WSTunnel](https://github.com/erebe/wstunnel/) web-socket tunnel, and running a [WireGuard](https://www.wireguard.com/) VPN over that tunnel.
+In this guide I'm going to demonstrate setting up an HTTPS based web-socket tunnel between to locations, using [WSTunnel](https://github.com/erebe/wstunnel/), and demonstrate running a VPN over that tunnel, using [WireGuard](https://www.wireguard.com/).
 
-For this guide the requirement is to make a VPN between two locations:
+The two locations will be:
 
 * a network location which is behind a corporate firewall and has no UDP or TCP egress from the corporate network other than via an HTTP/HTTPS proxy
 * a network location which can accept incoming incoming connections via an HTTPS reverse-proxy
 
-There are many purposes for a VPN like this. One example could be to transfer business data between a remote system and the corporate headquarters.
+There are many purposes for a VPN like this. One example is to transfer business data between a remote system and a corporate headquarters.
+
+![Overview diagram of systems communicating via proxy](wstunnel_wireguard_overview.png)
 
 I've seen some guides which focus on configuring a [WireGuard](https://www.wireguard.com/) VPN and then tack on using a [WSTunnel](https://github.com/erebe/wstunnel/) web-socket tunnel to tunnel the [WireGuard](https://www.wireguard.com/) VPN at the end of the article.
 
 For me, that is backwards, especially for this requirement.
 
-For this guide I will start by making and testing a [WSTunnel](https://github.com/erebe/wstunnel/) web-socket tunnel and then finish with tunnelling a [WireGuard](https://www.wireguard.com/) VPN in the [WSTunnel](https://github.com/erebe/wstunnel/) web-socket tunnel.
+For this guide I will start by making and testing a [WSTunnel](https://github.com/erebe/wstunnel/) HTTPS web-socket tunnel and then finish with tunnelling a [WireGuard](https://www.wireguard.com/) VPN within the [WSTunnel](https://github.com/erebe/wstunnel/) web-socket tunnel.
 
 ### Network topology
 
@@ -28,10 +36,12 @@ I'm going to use the following components:
 * on the corporate network:
   * a server that supports [WireGuard](https://www.wireguard.com/). I'm going to use Linux server. I'll need root access, which I will achieve using `sudo`. This guide will call this server the `WireGuird client`.
   * a server that can run [WSTunnel](https://github.com/erebe/wstunnel/) on the corporate network. I'm going to use the same Linux server as the `WireGuird client`. I'll need root access, which I will achieve using `sudo`.
-  * the hostname and port of the corporate network's HTTP/HTTPS proxy.
+* available on the corporate network, with access to the public Internet
+  * an HTTP/HTTPS proxy server, such as Squid proxy. I'm going to assume it exists already, but we will need.
+  * the hostname and port of it.
 * publicly available from the Internet (either directly available or via a port forward on a NAT firewall):
   * an HTTP/HTTPS reverse proxy server. I'm going to demonstrate how this can be achieved using an instance of [Træfik](https://traefik.io/traefik/) running in a kubernetes cluster, and using [Nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/) on a Linux server (which could be a Raspberry Pi).
-  * TLS certificates for the hostname of the reverse proxy server.
+    * TLS certificates for the hostname of the reverse proxy server.
 * on the other network behind the reverse-proxy:
   * a server that can run [WSTunnel](https://github.com/erebe/wstunnel/). This could either be the same Linux server which is running the [Nginx](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/) HTTP/HTTPS reverse proxy, or the same Linux server which is running the [WireGuard](https://www.wireguard.com/) software.
   * a server that supports [WireGuard](https://www.wireguard.com/). I'm going to demonstrate how this can be achieved using a Linux server, and how this can be achieved using a [Mikrotik router](https://mikrotik.com/products/group/ethernet-routers). I'll need root access to the Linux server, which I will achieve using `sudo`, or access to the Mikrotik command-line-interface / WebFig / Winbox. This guide will call this server the `WireGuird server`.
@@ -281,14 +291,16 @@ I gained shell access to both the Linux servers and download the latest version 
 HTTPS_PROXY=http://corporate.proxy curl -o wstunnel https://github.com/erebe/wstunnel/releases/download/v4.1/wstunnel-x64-linux
 
 # WireGuard server
-curl -o wstunnel https://github.com/erebe/wstunnel/releases/download/v4.1/wstunnel-x64-linux
-
-## Raspberry Pi
-curl -o wstunnel.zip https://github.com/erebe/wstunnel/releases/download/v4.1/wstunnel-aarch64-linux.zip
-unzip wstunnel.zip
-
+curl -L -o wstunnel https://github.com/erebe/wstunnel/releases/download/v4.1/wstunnel-x64-linux
 sudo mv wstunnel /usr/local/bin/wstunnel
 sudo chmod a+x /usr/local/bin/wstunnel
+
+## Raspberry Pi
+curl -L -o wstunnel.zip https://github.com/erebe/wstunnel/releases/download/v4.1/wstunnel-aarch64-linux.zip
+unzip wstunnel.zip
+sudo mv wstunnel_aarch64 /usr/local/bin/wstunnel
+sudo chmod a+x /usr/local/bin/wstunnel
+sudo apt install libnuma1
 ```
 
 ## Manually run a WSTunnel applications to create the tunnel between the WireGuard client and WireGuard server
