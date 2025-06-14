@@ -23,6 +23,8 @@
     - [Installing a Highly Available K3s cluster](kubernetes/k3s/deploying_ha_cluster)
     - [Highly Available K3s cluster datastore options](kubernetes/k3s/cluster_database_options)
     - [Upgrade k3s to v1.22 where Træfik v1 is not compatible](kubernetes/k3s/upgrading_k3s_to_1.22+)
+  - Classic ACtiveMQ
+    - [Deploying a Highly Available Classic ActiveMQ cluster](kubernetes/activemq/index)
   - Træfic proxy
     - [Deploying Træfik](kubernetes/traefik/traefik_deployment_and_patching)
     - [Exposing an app using Træfik Proxy with manually configured TLS certificates](kubernetes/traefik/traefik_with_manual_certificates)
