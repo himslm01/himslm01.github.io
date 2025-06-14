@@ -4,7 +4,7 @@
 
 **As a** service provider company with a tight firewall,
 **I want** to make a VPN between my company and another company,
-**so that** we can securely exchange data.
+**so that** we can securely exchange data between systems in the two companies.
 
 ## Overview
 
