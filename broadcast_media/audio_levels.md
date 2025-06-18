@@ -23,7 +23,7 @@
 | LU | Loudness Unit | A unit for subjective loudness differences.<br /><br />Applying a gain of 1dB to a signal will increase its loudness level by 1LU. In that sense, 1 LU is equivalent to 1 dB. |
 |LUFS | Loudness Unit Full Scale | A unit for subjective loudness levels relative to full scale, measured using ITU-R BS.1770.<br /><br />EBU R 128 recommends that all programmes be normalised to an average foreground loudness level of -23 LUFS. |
 |VU | Volume Unit | The scale on many "tape recorders" and often used in USA audio mixing studios.<br /><https://en.wikipedia.org/wiki/VU_meter> |
-|PPM | Peak Program Meter | The scale on most audio mixing studios in the UK.<br />BBC lineup tone is 0dBu and on mono BBC PPMs lineup that should align with PPM 4.<br /><https://en.wikipedia.org/wiki/Peak_programme_meter> |
+|PPM | Peak Program Meter | The scale on most broadcast audio mixing studios in the UK.<br />BBC lineup tone is 0dBu. On mono BBC PPMs lineup tone should align with PPM 4.<br /><https://en.wikipedia.org/wiki/Peak_programme_meter> |
 
 ## Audio level reduction
 
