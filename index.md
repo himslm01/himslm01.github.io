@@ -2,7 +2,7 @@
 
 ## Index
 
-- [About me](about_me)
+- [About me](about_me/index)
 - Blackmagic Design
   - DaVinci Resolve
     - [Installing DaVinci Resolve on OpenSuse Tumbleweed](BlackmagicDesign/DaVinci_Resolve/install_DaVinciResolve_on_OpenSuse_Tumbleweed)

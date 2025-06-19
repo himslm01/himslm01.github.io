@@ -16,9 +16,7 @@
 ### Open Source
 
 - several commits into [FFmpeg](http://ffmpeg.org/), adding and extending video filters for broadcast requirements:
-<br/><https://github.com/FFmpeg/FFmpeg/search?q=author%3Ahimslm01&type=commits>
-<br/><https://github.com/FFmpeg/FFmpeg/search?q=himsley>
-
+  - [my additions](https://github.com/FFmpeg/FFmpeg/search?q=himsley) and [my submissions](https://github.com/FFmpeg/FFmpeg/search?q=author%3Ahimslm01&type=commits)
   - added the [`framerate`](http://ffmpeg.org/ffmpeg-all.html#framerate) filter implementing a simple linear-blend framerate conversion
   - added the [`w3fdif`](http://ffmpeg.org/ffmpeg-all.html#w3fdif) filter implementing high-quality deinterlace to a BBC Research and Development specification
   - added the [`fieldorder`](http://ffmpeg.org/ffmpeg-all.html#fieldorder) filter to swap interlaced field order
