@@ -3,24 +3,28 @@
 ## Index
 
 - [About me](about_me/index)
+- Video and Audio Media
+  - [Codecs](media/codecs)
+  - [Containers](media/containers)
+  - [Formats](media/formats)
+  - Broadcast Video and Audio Media
+    - [Broadcast Media 101](broadcast_media/broadcast_media_101)
+    - [TV Aspect Ratios - SD 576 line formats ('PAL' & 'SECAM')](broadcast_media/tv_aspect_ratios-576lines)
+  - FFmpeg
+    - [Command line basics](FFmpeg/command_line_basics)
+    - [Creating test signal files](FFmpeg/creating_test_signal_files)
+    - [Creating silence](FFmpeg/creating_silence)
+    - [Converting broadcast video media for inclusion into HTML graphics](FFmpeg/broadcast_media_to_webm)
+    - [Using Decklink devices](FFmpeg/using_decklink_devices)
+    - [Compiling with NDI](FFmpeg/compiling_with_NDI)
 - Blackmagic Design
   - DaVinci Resolve
     - [Installing DaVinci Resolve on OpenSuse Tumbleweed](BlackmagicDesign/DaVinci_Resolve/install_DaVinciResolve_on_OpenSuse_Tumbleweed)
   - Desktop Video
     - [Installing Desktop Video on OpenSuse Tumbleweed Kernel 6.8](BlackmagicDesign/Desktop_Video/install_Desktop_Video_on_OpenSuse_Tumbleweed_Kernel_6.8)
-- Broadcast Media
-  - [Broadcast Media 101](broadcast_media/broadcast_media_101)
-  - [TV Aspect Ratios - SD 576 line formats ('PAL' & 'SECAM')](broadcast_media/tv_aspect_ratios-576lines)
 - File systems
   - [BTRFS](filesystems/btrfs)
   - [ZFS](filesystems/zfs)
-- FFmpeg
-  - [Command line basics](FFmpeg/command_line_basics)
-  - [Creating test signal files](FFmpeg/creating_test_signal_files)
-  - [Creating silence](FFmpeg/creating_silence)
-  - [Converting broadcast video media for inclusion into HTML graphics](FFmpeg/broadcast_media_to_webm)
-  - [Using Decklink devices](FFmpeg/using_decklink_devices)
-  - [Compiling with NDI](FFmpeg/compiling_with_NDI)
 - Kubernetes
   - The K3s distribution
     - [Installing a Highly Available K3s cluster](kubernetes/k3s/deploying_ha_cluster)
