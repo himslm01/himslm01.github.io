@@ -5,12 +5,17 @@ Note that the following commands will be too long to easily read on a single lin
 ## The old way to Create a never-ending mono stream of silence
 
 The old way to create silence is to say the input file is of a format of raw-uncompressed audio and read from /dev/zero.
-This creates an infinitely long audio stream.
 
-```text
+That would create an infinitely long audio stream, so we use a parameter to limit the duration of the output file.
+
+```code
 ffmpeg \
--ar 48000 -ac 1 -f s16le -i /dev/zero \
--t 10 -y silence.wav
+ -ar 48000 \
+ -ac 1 \
+ -f s16le \
+ -i /dev/zero \
+ -t 10 \
+ silence.wav
 ```
 
 * `-ar 48000` set the sample rate to 48KHz
@@ -50,17 +55,17 @@ Creating silence is simple.
 -shortest
 ```
 
-- s = sample rate (defaults to 44,100)
-- n = number of samples per block (defaults to 1024)
+* s = sample rate (defaults to 44,100)
+* n = number of samples per block (defaults to 1024)
 
-It might be better to create one audio block per frame - which is easy for UK frame rates:
+It might be better to create one audio block per frame - which is easy for integer frame rates:
 
 n = sample_rate ÷ frame_rate
 
 for example:
 
-- 48000 ÷ 25 = 1920
-- 48000 ÷ 50 = 960
+* 48000 ÷ 25 = 1920
+* 48000 ÷ 50 = 960
 
 ## Create a time bound mono stream of silence
 
@@ -70,14 +75,14 @@ If you are adding silence to a video source, and you know length of the source v
 -f lavfi -i "aevalsrc=0:n=1920:s=48000:d=60.0"
 ```
 
-- d = duration
+* d = duration
 
 duration can be in seconds or other [FFmpeg time formats](https://ffmpeg.org//ffmpeg-utils.html#time-duration-syntax)
 
 for example:
 
-- 60.0
-- 60000ms
+* 60.0
+* 60000ms
 
 ## Multiple streams of time bound mono stream of silence
 
@@ -90,7 +95,7 @@ If you need multiple streams - just create multiple inputs.
 -map 1:a \
 ```
 
-## Do it in a fliter instead
+## Do it in a filter instead
 
 Alternatively, especially if you are going to use `-filter_complex` in your full command-line, you can 'just' make a stream in the filter, and use other filter commands to manipulate the stream.
 

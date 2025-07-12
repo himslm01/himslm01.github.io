@@ -34,7 +34,7 @@ public class SimpleEncode implements Runnable {
 
     @Override
     public void run() {
-        FFmpeg.atPath(Path.of("/home/userh/bin/"))
+        FFmpeg.atPath(Path.of("/home/user/bin/"))
                 .addArguments("-loglevel", "debug")
                 .setOverwriteOutput(true)
                 .addInput(getInput())
