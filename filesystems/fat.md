@@ -14,7 +14,7 @@ So, I need to create a file which looks like a FAT formatted filesystem, put the
 
 ### The process to create a file containing a FAT filesystem
 
-Create a file large enough to gold the FAT filesystem and the BIOS file, but not too big as it has to be uploaded to a remote location.
+Create a file large enough to hold the FAT filesystem and the BIOS file, but not too big as it has to be uploaded to a remote location.
 
 ```console
 truncate -s 128M fat-disk.img
@@ -22,8 +22,13 @@ truncate -s 128M fat-disk.img
 
 Create a loop-back device pointing to the file, so that software requiring devices not files can work on the file.
 
+Note the response to the command.
+
+Later I'll need to use the specific loop-back device that this command returns.
+
 ```console
-sudo losetup --show --find fat-disk.img
+$ sudo losetup --show --find fat-disk.img
+/dev/loop0
 ```
 
 Format the loop-back device as a FAT filesystem.
