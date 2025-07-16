@@ -2,20 +2,16 @@
 
 Contents:
 
-* [Install zfs](#install)
-  * [Install zfs on OpenSUSE Tumbleweed](#tumbleweed)
-  * [Install zfs on MacOS](#macos)
-* [Building zfs pools](#build)
-  * [Building up to a zfs RAID10 pool](#build_raid10)
-* [Create a zfs pool with some datasets on a removable disk](#create_pool)
-  * [Transfer the pool to another host](#create_transfer_pool)
-  * [Creating root level directories on MacOS](#create_macos_directories)
-
-<div id='install'/>
+* [Install zfs](#install-zfs)
+  * [Install zfs on OpenSUSE Tumbleweed](#install-on-opensuse-tumbleweed)
+  * [Install zfs on MacOS](#install-on-macos)
+* [Building zfs pools](#building-pools)
+  * [Building up to a zfs RAID10 pool](#building-up-to-a-raid10-pool)
+* [Create a zfs pool with some datasets on a removable disk](#create-a-pool-on-a-removable-disk-with-some-datasets)
+  * [Transfer the pool to another host](#transfer-the-pool-to-another-host)
+  * [Creating root level directories on MacOS](#creating-root-level-directories-on-macos)
 
 ## Install zfs
-
-<div id='tumbleweed'/>
 
 ### Install on OpenSUSE Tumbleweed
 
@@ -31,7 +27,8 @@ For more details see the [OpenSUSE ZFS package](https://software.opensuse.org/do
 
 #### Tumbleweed won't boot after a kernel upgrade
 
-I have found, on two machines, than after installing zfs and then upgrading the kernel with `zypper dup` the system fails to boot. This seems to be caused by the initramfs failing to be built because the kernel modules for zfs could not be included.
+I have found, on two machines, than after installing zfs and then upgrading the kernel with `zypper dup` the system fails to boot.
+This seems to be caused by the initramfs failing to be built because the kernel modules for zfs could not be included.
 
 I don't need zfs at boot time on my Tumbleweed systems, so I found the best way to fix the issue is to omit the zfs kernel modules from the initramfs.
 
@@ -53,27 +50,26 @@ or for a specific kernel:
 sudo /usr/bin/dracut -f /boot/initrd-6.11.7-1-default 6.11.7-1-default
 ```
 
-<div id='macos'/>
-
 ### Install on MacOS
 
-Download from [here](https://openzfsonosx.org/wiki/Downloads) the appropriate OpenZFS for OSX package for your MacOS version, or the installer containing all of the packages, and install the appropriate `.pkg` file for your operating system. A reboot is required after the install has completed.
+Download from [here](https://openzfsonosx.org/wiki/Downloads) the appropriate OpenZFS for OSX package for your MacOS version, or the installer containing all of the packages, and install the appropriate `.pkg` file for your operating system.
+A reboot is required after the install has completed.
 
 ## Pools and filesystems
 
-As will be demonstrated in a moment, one or more devices (or files) can be brought together to create a zfs pool, into which one or more datasets can be stored. A dataset can be a POSIX style filesystem, a block device style volume, or a snapshot of a filesystem or volume.
+As will be demonstrated in a moment, one or more devices (or files) can be brought together to create a zfs pool, into which one or more datasets can be stored.
+A dataset can be a POSIX style filesystem, a block device style volume, or a snapshot of a filesystem or volume.
 
-When a zfs pool is created a root filesystem dataset is created. If you create a zfs pool called `tank` then a zfs filesystem called `tank` will be created in that pool.
+When a zfs pool is created a root filesystem dataset is created.
+If you create a zfs pool called `tank` then a zfs filesystem called `tank` will be created in that pool.
 
 Further datasets can be created within a dataset
 
-Within a dataset's metadata there is information about where the dataset will be mounted onto the filesystem. A special mount point of `none` exists to stop a dataset being mounted. In many circumstances the root filesystem dataset is not mounted.
-
-<div id='build'/>
+Within a dataset's metadata there is information about where the dataset will be mounted onto the filesystem.
+A special mount point of `none` exists to stop a dataset being mounted.
+In many circumstances the root filesystem dataset is not mounted.
 
 ## Building pools
-
-<div id='build_raid10'/>
 
 ### Building up to a RAID10 pool
 
@@ -256,7 +252,9 @@ config:
 errors: No known data errors
 ```
 
-It might take some time to copy the data from the removed vdev to the remaining vdevs. Monitor the progress with the `zpool status` command. **Don't just yank the removed drive.**
+It might take some time to copy the data from the removed vdev to the remaining vdevs.
+Monitor the progress with the `zpool status` command.
+**Don't just yank the removed drive.**
 
 ##### 4.2 add a mirror pair of drives in one go
 
@@ -299,19 +297,20 @@ NAME                               USED  AVAIL     REFER  MOUNTPOINT
 zpoolmedia/media@20241029T163330     0B      -     7.19T  -
 ```
 
-<div id='create_pool'/>
-
 ## Create a pool on a removable disk with some datasets
 
-Note that creating pools on USB attached disks is not recommended, due to the possability of USB disks becoming detached unexpectedly. But sometimes needs must, and it might be an okay plan for a backup disk for home.
+Note that creating pools on USB attached disks is not recommended, due to the possability of USB disks becoming detached unexpectedly.
+But sometimes needs must, and it might be an okay plan for a backup disk for home.
 
-Find the disk you are after using in the list of disks attached to the host. Best practice is to use the disk ID, because it is consistent across reboots and re-plugs.
+Find the disk you are after using in the list of disks attached to the host.
+Best practice is to use the disk ID, because it is consistent across reboots and re-plugs.
 
 ```text
 ls -l /dev/disk/by-id/
 ```
 
-Creating a pool automatically creates a root dataset on that pool. Best practice is to not use the root dataset, therefore set the mount point to the magic value of `none` so that it will not be mounted.
+Creating a pool automatically creates a root dataset on that pool.
+Best practice is to not use the root dataset, therefore set the mount point to the magic value of `none` so that it will not be mounted.
 
 ```text
 zpool create -m none -f usbwd14t usb-WD_Elements_25A3_394D48423242364A-0:0
@@ -332,42 +331,45 @@ mkdir /export
 zfs create -o mountpoint=/export/old_disks usbwd14t/old_disks
 ```
 
-Other datasets can be created at the root level or within the dataset just created. For instance, I'll create a dataset within the 'old_disks` dataset and rsync an old disk's contents into it.
+Other datasets can be created at the root level or within the dataset just created.
+For instance, I'll create a dataset within the 'old_disks` dataset and rsync an old disk's contents into it.
 
 ```text
 zfs create usbwd14t/old_disks/segate_500G
 rsync -var /mnt/sdc1 /export/old_disks/segate_500G/
 ```
 
-<div id='create_transfer_pool'/>
-
 ### Transfer the pool to another host
 
-To properly unmount a zfs disk you need to un-attach the pool from the current host. This is done with the `zpool export` command.
+To properly unmount a zfs disk you need to un-attach the pool from the current host.
+This is done with the `zpool export` command.
 
 ```text
 zpool export usbwd14t
 ```
 
-This zfs disk can now be connected to another host and the pool can be attached to the new host. This is done with the `zpool import` command.
+This zfs disk can now be connected to another host and the pool can be attached to the new host.
+This is done with the `zpool import` command.
 
 ```text
 zpool import usbwd14t
 ```
 
-Note that the directories that the datasets are set to mount on must either exist already on the new host, or be creatable by the ZFS drivers. For the directories to be creatable means the filesystem cannot be read-only. See the [section below](#macosdirectories) if you need to create a root level directory on MacoOS.
-
-<div id='create_macos_directories'/>
+Note that the directories that the datasets are set to mount on must either exist already on the new host, or be creatable by the ZFS drivers.
+For the directories to be creatable means the filesystem cannot be read-only.
+See the [section below](#macosdirectories) if you need to create a root level directory on MacoOS.
 
 ### Creating root level directories on MacOS
 
 Since around 2020 the root partition on MacOS has been read-only.
 
-Since I set the mount points for the datasets in the pool to be within the `/export` directory on Linux, I'm going to need to create that on MacOS. Alternate solutions might be to use the `-R` option to set the alternate root for the pool, or use the `-N` option to not automatically mount the datasets in the pool.
+Since I set the mount points for the datasets in the pool to be within the `/export` directory on Linux, I'm going to need to create that on MacOS.
+Alternate solutions might be to use the `-R` option to set the alternate root for the pool, or use the `-N` option to not automatically mount the datasets in the pool.
 
 If you need to create a new directory on the root partition then this is the procedure.
 
-1. make a new directory in a writeable area of the filesystem. /System/Volumes/Data/ is a good place:
+1. make a new directory in a writeable area of the filesystem.
+/System/Volumes/Data/ is a good place:
 
 ```text
 mkdir /System/Volumes/Data/export

@@ -1,29 +1,26 @@
 # BTRFS
 
-* [Device groups and subvolumes](#device_groups)
-* [Building BTRFS device groups](#build)
-  * [Making device groups](#build_make_device_group)
-  * [Mounting device groups](#build_mount_device_group)
-  * [Subvolumes or directories?](#build_device_group_subvolume)
-  * [Un-mounting device groups](#build_unmount_device_group)
-  * [Building up to a RAID 10 device group](#build_raid10)
+* [Device groups and subvolumes](#device-groups-and-subvolumes)
+* [Building BTRFS device groups](#making-btrfs-device-groups)
+  * [Making device groups](#creating-a-btrfs-device-group)
+  * [Mounting device groups](#mounting-a-btrfs-device-group)
+  * [Subvolumes or directories?](#device-group-subvolumes)
+  * [Un-mounting device groups](#unmounting-the-btrfs-device-group)
+  * [Building up to a RAID 10 device group](#building-up-to-a-raid10-device-group
 * [Subvolumes](#subvolumes)
-
-<div id='device_groups'/>
 
 ## Device groups and subvolumes
 
 With btrfs, one or more storage devices can be brought together to create a btrfs device group, into which one or more POSIX style filesystems can be created.
 
-When a btrfs device group is created, a filesystem is always created in that device group. That filesystem is called `/` and may be referred to as the "root subvolume", or the "top level subvolume", or the "root filesystem" of the btrfs device group.
+When a btrfs device group is created, a filesystem is always created in that device group.
+That filesystem is called `/` and may be referred to as the "root subvolume", or the "top level subvolume", or the "root filesystem" of the btrfs device group.
 
-Do not confuse a btrfs device group's root subvolume, called `/`, with the path of the root directory of your system's filesystems, also called `/`. When you have multiple btrfs device groups, each device group will have its own root subvolume, each called `/`. Your system will only have one directory path called `/` from which you can traverse to every other directory, file, and mounted filesystem in your system.
-
-<div id='build'/>
+Do not confuse a btrfs device group's root subvolume, called `/`, with the path of the root directory of your system's filesystems, also called `/`.
+When you have multiple btrfs device groups, each device group will have its own root subvolume, each called `/`.
+Your system will only have one directory path called `/` from which you can traverse to every other directory, file, and mounted filesystem in your system.
 
 ## Making BTRFS device groups
-
-<div id='build_make_device_group'/>
 
 ### Creating a btrfs device group
 
@@ -34,8 +31,6 @@ $ sudo mkfs -t btrfs /dev/sda
 ```
 
 Once created, the btrfs device group's root subvolume can be mounted anywhere onto the system's filesystem, either manually or using `/etc/fstab`.
-
-<div id='build_mount_device_group'/>
 
 ### Mounting a BTRFS device group
 
@@ -59,13 +54,12 @@ Note the `subvolid=5` and the `subvol=/` from the output of the mount command, t
 * This btrfs device group has it's root subvolume, which is called `/`, sometimes referred to as the "top level subvolume", or the "root filesystem", or `subvol=/`.
 * This btrfs device group's root subvolume is mounted onto the systems filesystem at the directory `/mnt`.
 
-<div id='build_device_group_subvolume'/>
-
 ### Device group Subvolumes
 
 Subvolumes can be created within the root subvolume of the btrfs device group, and subvolumes can be created within other subvolumes.
 
-Subvolumes look like a directory within the root filesystem or subvolume. Looking at a directory or a subvolume will look identical from the system's filesystem.
+Subvolumes look like a directory within the root filesystem or subvolume.
+Looking at a directory or a subvolume will look identical from the system's filesystem.
 
 #### Creating a subvolume
 
@@ -98,8 +92,6 @@ $ sudo rmdir foo
 $ sudo rmdir bar
 ```
 
-<div id='build_unmount_device_group'/>
-
 ### Unmounting the BTRFS device group
 
 The device group can be unmounted manually:
@@ -107,8 +99,6 @@ The device group can be unmounted manually:
 ```text
 umount /mnt
 ```
-
-<div id='build_raid10'/>
 
 ## Building up to a RAID10 device group
 
@@ -186,7 +176,8 @@ Devices:
     1    10.00GiB  /dev/loop1
 ```
 
-All operations need to be applied when the btrfs filesystem is mounted. Mount the newly created btrfs device root subvolume onto `/mnt`.
+All operations need to be applied when the btrfs filesystem is mounted.
+Mount the newly created btrfs device root subvolume onto `/mnt`.
 
 ```text
 $ mount /dev/loop1 /mnt
@@ -270,19 +261,21 @@ Using all four of the loopback devices created from the files, create a Raid 10 
 $ mkfs -t btrfs --mixed --metadata raid10 --data raid10 /dev/loop1 /dev/loop2 /dev/loop3 /dev/loop4
 ```
 
-<div id='subvolumes'/>
-
 ## Subvolumes
 
-As seen above, to interact with a btrfs device group the group has to be mounted onto the system's filesystem. In the examples above, the btrfs device group's root subvolume was mounted onto the directory at the path `/mnt` on the system's filesystem.
+As seen above, to interact with a btrfs device group the group has to be mounted onto the system's filesystem.
+In the examples above, the btrfs device group's root subvolume was mounted onto the directory at the path `/mnt` on the system's filesystem.
 
 Once that has been done, the device group can be interacted with by referring to the mount point path `/mnt`.
 
 But as was alluded to by the output of the mount command above, where it said `subvol=/`, it's possible to mount a btrfs subvolume onto any (usually empty) directory of the system's filesystem.
 
-Subvolumes can have any valid filesystem compliant name, we've seen that subvolumes look just like directories. But there is a _convention_ that subvolumes which are going to be mounted begin with `/@/`.
+Subvolumes can have any valid filesystem compliant name, we've seen that subvolumes look just like directories.
+But there is a _convention_ that subvolumes which are going to be mounted begin with `/@/`.
 
-Many desktop linux distributions use btrfs as their filesystem, and mount subvolumes instead of partitions to separate data and make for easier backups and rollbacks. For instance distributions may create btrfs subvolumes called `/@/home`, `/@/opt`, `/@/root`, `/@/srv`, `/@/usr/local` and `/@/var` which would be mounted on `/home`, `/opt`, `/root`, `/srv`, `/usr/local` and `/var` respectively. In this instance, the btrfs device group's root subvolume would usually not be mounted onto the system's filesystem.
+Many desktop linux distributions use btrfs as their filesystem, and mount subvolumes instead of partitions to separate data and make for easier backups and rollbacks.
+For instance distributions may create btrfs subvolumes called `/@/home`, `/@/opt`, `/@/root`, `/@/srv`, `/@/usr/local` and `/@/var` which would be mounted on `/home`, `/opt`, `/root`, `/srv`, `/usr/local` and `/var` respectively.
+In this instance, the btrfs device group's root subvolume would usually not be mounted onto the system's filesystem.
 
 The subvolumes are mounted at boot file through the instructions in `/etc/fstab`, which might look like this:
 

@@ -25,6 +25,7 @@
 - File systems
   - [BTRFS](filesystems/btrfs)
   - [ZFS](filesystems/zfs)
+  - [FAT](filesystems/fat)
 - Kubernetes
   - The K3s distribution
     - [Installing a Highly Available K3s cluster](kubernetes/k3s/deploying_ha_cluster)
