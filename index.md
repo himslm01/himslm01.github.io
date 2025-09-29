@@ -45,4 +45,4 @@
 
 ## Blog Posts
 
-- [2023-10-15 UTF-8 Character Encoding in Java on Windows](programming/java/utf8_character_encoding_windows/index)
+- [2023-10-15 UTF-8 Character Encoding in Java on Windows](blog/2023/10/15/Java_utf8_character_encoding_windows)
