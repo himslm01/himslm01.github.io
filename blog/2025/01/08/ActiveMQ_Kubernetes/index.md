@@ -26,7 +26,15 @@ In traditional static ActiveMQ systems the ActiveMQ clients will be given a conn
 
 In a dynamic ActiveMQ system running in Kubernetes the ActiveMQ clients cannot know a list of ActiveMQ Classic servers. Instead the ActiveMQ clients are given one Kubernetes Service to connect to.
 
-The Kubernetes Service cannot be left to load-balance across all of the ActiveMQ Pods because only one of them will be presenting open network connections. The Kubernetes Service must be guided to only forward connection requests from the ActiveMQ clients to the Pod running the currently active server node. This is achieved using labels on the Pods.
+The Kubernetes Service cannot be left to load-balance across all of the ActiveMQ Pods because only one of them will be presenting open network connections.
+
+![Why ActiveMQ Kubernetes won't work diagram](activemq-kubernetes_fail.svg)
+
+The Pods which are not currently active are not listening for connections. Every load-balanced client connection directed to Pods in that state will result in a failed connection.
+
+The Kubernetes Service must be guided to only forward connection requests from the ActiveMQ clients to the Pod running the currently active server node. This is achieved using labels on the Pods.
+
+### Solution
 
 The template metadata for the ActiveMQ Pods sets labels of `app=activemq` and `leader=no` for all of the ActiveMQ Pods.
 
@@ -34,7 +42,7 @@ The ActiveMQ Kubernetes Service definition has a selector which is looking for P
 
 The ActiveMQ Pods consist of two containers. The first container runs the ActiveMQ Classic server. The second container runs a Bash script which constantly tries to connect to the local ActiveMQ Classic server in the Pod. When it can connect, which can only happen when the local ActiveMQ Classic server is the currently active server node, the script changes a label on its pod to be `leader=yes`. The Kubernetes Service now has one Pod it can route ActiveMQ client connections to.
 
-![ActiveMQ Kubernetes diagram](activemq-kubernetes.svg)
+![working ActiveMQ Kubernetes diagram](activemq-kubernetes.svg)
 
 When the currently active ActiveMQ Classic server node dies, the Pod it was running in will be deleted and a new Pod will be created with the label `leader=no`. But another of the waiting ActiveMQ Classic servers will have become the currently active server and the Bash script in that Pod will have updated its Pod label from `leader=no` to `leader=yes`. The Kubernetes Service will now route ActiveMQ client connections to that new currently active server in its Pod. This process typically takes a few seconds. The ActiveMQ clients should be able to withstand this change-over process.
 
