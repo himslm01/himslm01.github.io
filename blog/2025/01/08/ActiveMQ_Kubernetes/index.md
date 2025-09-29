@@ -1,9 +1,9 @@
-# Running an HA ActiveMQ in Kubernetes
+# Running an HA ActiveMQ Classic in Kubernetes
 
 ## Use case
 
 **As a** software developer with a Kubernetes cluster and some NFS storage,  
-**I want** to run a Highly Available classic ActiveMQ cluster,  
+**I want** to run a Highly Available ActiveMQ Classic cluster,  
 **so that** I can develop and test against STOMP, MQTT and other topic & queue based protocols.
 
 ## Proposed Solution
@@ -25,6 +25,8 @@ In traditional static ActiveMQ systems the ActiveMQ clients will be given a conn
 ![Shared File System Master Slave diagram](activemq-shared_file_system_master_slave.svg)
 
 In a dynamic ActiveMQ system running in Kubernetes the ActiveMQ clients cannot know a list of ActiveMQ Classic servers. Instead the ActiveMQ clients are given one Kubernetes Service to connect to.
+
+### Problem
 
 The Kubernetes Service cannot be left to load-balance across all of the ActiveMQ Pods because only one of them will be presenting open network connections.
 
