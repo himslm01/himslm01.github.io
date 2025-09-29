@@ -16,7 +16,7 @@ I can make a Kubernetes *Deployment* requesting two (or more) classic ActiveMQ s
 
 The High Availability system used in this solution is ActiveMQ Classic's built-in [Shared File System Master Slave](https://activemq.apache.org/components/classic/documentation/shared-file-system-master-slave) (their words).
 
-When multiple ActiveMQ Classic server nodes use a shared file system, such as NFS v4, to store their persistent data, the first server node will grab an exclusive lock on the filesystem and it will become the active server node. At that point the currently active server node will open it's network connections and ActiveMQ clients will be able to connect to this server node. All the other ActiveMQ Classicserver nodes will be waiting for the exclusive lock to be available and will not present open network connections.
+When multiple ActiveMQ Classic server nodes use a shared file system, such as NFS v4, to store their persistent data, the first server node will grab an exclusive lock on the filesystem and it will become the active server node. At that point the currently active server node will open it's network connections and ActiveMQ clients will be able to connect to this server node. All the other ActiveMQ Classic server nodes will be waiting for the exclusive lock to be available and will not present open network connections.
 
 When the currently active server node dies it will release the exclusive lock and another waiting server node will grab the exclusive lock and will turn into the currently active server node.
 
@@ -42,11 +42,19 @@ The template metadata for the ActiveMQ Pods sets labels of `app=activemq` and `l
 
 The ActiveMQ Kubernetes Service definition has a selector which is looking for Pods with the labels of `app=activemq` and `leader=yes`.
 
-The ActiveMQ Pods consist of two containers. The first container runs the ActiveMQ Classic server. The second container runs a Bash script which constantly tries to connect to the local ActiveMQ Classic server in the Pod. When it can connect, which can only happen when the local ActiveMQ Classic server is the currently active server node, the script changes a label on its pod to be `leader=yes`. The Kubernetes Service now has one Pod it can route ActiveMQ client connections to.
+The ActiveMQ Pods consist of two containers. The first container runs the ActiveMQ Classic server. The second container runs a Bash [script](https://github.com/himslm01/activemq-kubernetes/blob/main/src/activemq-readiness/wait_until_ready.sh) which constantly tries to connect to the local ActiveMQ Classic server in the Pod.
+
+When the script can connect to the ActiveMQ Classic server in its pod, which can only happen when the local ActiveMQ Classic server is the currently active server node, the script changes a label on its pod to be `leader=yes`.
+
+The Kubernetes Service updates the Kubernetes EndPoint, so that Kubernetes can route ActiveMQ client connections to the Pod where the ActiveMQ Classic is the active server node.
 
 ![working ActiveMQ Kubernetes diagram](activemq-kubernetes.svg)
 
-When the currently active ActiveMQ Classic server node dies, the Pod it was running in will be deleted and a new Pod will be created with the label `leader=no`. But another of the waiting ActiveMQ Classic servers will have become the currently active server and the Bash script in that Pod will have updated its Pod label from `leader=no` to `leader=yes`. The Kubernetes Service will now route ActiveMQ client connections to that new currently active server in its Pod. This process typically takes a few seconds. The ActiveMQ clients should be able to withstand this change-over process.
+When the currently active ActiveMQ Classic server node dies, the Pod it was running in will be deleted and a new Pod will be created with the label `leader=no`.
+
+Another of the waiting ActiveMQ Classic servers will have become the currently active server and the Bash script in that Pod will have updated its Pod label from `leader=no` to `leader=yes`.
+
+The Kubernetes Service will now route ActiveMQ client connections to that new currently active server in its Pod. This process typically takes a few seconds. The ActiveMQ clients should be able to withstand this change-over process.
 
 ## Implementation
 
