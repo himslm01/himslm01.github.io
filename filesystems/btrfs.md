@@ -6,7 +6,7 @@
   * [Mounting device groups](#mounting-a-btrfs-device-group)
   * [Subvolumes or directories?](#device-group-subvolumes)
   * [Un-mounting device groups](#unmounting-the-btrfs-device-group)
-  * [Building up to a RAID 10 device group](#building-up-to-a-raid10-device-group
+  * [Building up to a RAID 10 device group](#building-up-to-a-raid10-device-group)
 * [Subvolumes](#subvolumes)
 
 ## Device groups and subvolumes
