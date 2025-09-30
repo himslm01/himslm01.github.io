@@ -38,24 +38,38 @@ The Kubernetes Service must be guided to only forward connection requests from t
 
 ### Solution
 
-The template metadata for the ActiveMQ Pods sets labels of `app=activemq` and `leader=no` for all of the ActiveMQ Pods.
+Initially all of the ActiveMQ Classic Pods will have labels of `app=activemq` and `leader=no`.
 
-The ActiveMQ Kubernetes Service definition has a selector which is looking for Pods with the labels of `app=activemq` and `leader=yes`.
+One of the ActiveMQ Classic servers will have created the exclusive lock on the filesystem and it will become the active server node.
 
-The ActiveMQ Pods consist of two containers. The first container runs the ActiveMQ Classic server. The second container runs a Bash [script](https://github.com/himslm01/activemq-kubernetes/blob/main/src/activemq-readiness/wait_until_ready.sh) which constantly tries to connect to the local ActiveMQ Classic server in the Pod.
+The ActiveMQ Kubernetes Service definition, which guides client connections to servers running in Pods, has a selector which is looking for Pods with the labels of `app=activemq` and `leader=yes`.
+
+So initially no ActiveMQ Classic Pod matches the requirements for the Kubernetes Service to use.
+
+The ActiveMQ Pods consist of two containers.
+
+* one container runs the ActiveMQ Classic server
+* a second container runs [this Bash script](https://github.com/himslm01/activemq-kubernetes/blob/main/src/activemq-readiness/wait_until_ready.sh) which constantly tries to connect to the local ActiveMQ Classic server in the Pod
 
 When the script can connect to the ActiveMQ Classic server in its pod, which can only happen when the local ActiveMQ Classic server is the currently active server node, the script changes a label on its pod to be `leader=yes`.
 
-The Kubernetes Service updates the Kubernetes EndPoint, so that Kubernetes can route ActiveMQ client connections to the Pod where the ActiveMQ Classic is the active server node.
+The Kubernetes Service updates the Kubernetes EndPoint, so that Kubernetes can route ActiveMQ client connections to the Pod where the ActiveMQ Classic is running in active server mode.
 
 ![working ActiveMQ Kubernetes diagram](activemq-kubernetes.svg)
 
-When the currently active ActiveMQ Classic server node dies, the Pod it was running in will be deleted and a new Pod will be created with the label `leader=no`.
+When the currently active ActiveMQ Classic server node dies, the Pod it was running in will be deleted, meaning once again there is no ActiveMQ Classic Pod matches the requirements for the Kubernetes Service to use.
 
-Another of the waiting ActiveMQ Classic servers will have become the currently active server and the Bash script in that Pod will have updated its Pod label from `leader=no` to `leader=yes`.
+Kubernetes will start up a new Pod with labels of `app=activemq` and `leader=no`.
 
-The Kubernetes Service will now route ActiveMQ client connections to that new currently active server in its Pod. This process typically takes a few seconds. The ActiveMQ clients should be able to withstand this change-over process.
+One of the waiting ActiveMQ Classic servers will grab the exclusive lock on the filesystem and it will become the active server node. The Bash script in that Pod will update its Pod label from `leader=no` to `leader=yes`.
+
+The Kubernetes Service will once again be able route ActiveMQ client connections to that new currently active server in its Pod.
+
+This process typically takes a few seconds. The ActiveMQ clients should be able to withstand this change-over process.
 
 ## Implementation
 
-In [this GitHub repository](https://github.com/himslm01/activemq-kubernetes) I demonstrate a method of making Kubernetes *Services* only route traffic to the *Pod* running the *leader* instance of ActiveMQ.
+In [this GitHub repository](https://github.com/himslm01/activemq-kubernetes) I demonstrate:
+
+* building Open Container Initiative images  (otherwise known as Docker images) for ActiveMQ Classic and the side-car Bash script monitoring the state of the ActiveMQ Classic server
+* Deploying the system to a Kubernetes Cluster to create a Highly Available ActiveMQ Classic system
