@@ -18,7 +18,7 @@ This is because the 'active' picture (up to the outer chevron points) is the cen
 ---
 **_IMPORTANT:_**
 
-When converting from SD video into HD video the edges past the 4:3 or 16:9 lines must be cropped away. Only the centre 702 pixels of the 720 pixel SD video line must be used.
+When converting from SD video into HD video the edges past the 4:3 or 16:9 lines must be cropped and discarded. Only the centre 702 pixels of the 720 pixel SD video line must be used.
 
 When converting from HD video into SD video the edges past the 4:3 or 16:9 lines must be added back. The HD video must fill the centre 702 pixels of the 720 pixel SD video line, the rest is usually filled with black.
 

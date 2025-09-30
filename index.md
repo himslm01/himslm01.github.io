@@ -1,4 +1,4 @@
-# Mark Himsley
+#
 
 - [About me](about_me/)
 
@@ -9,14 +9,15 @@
 
 ## Index
 
+- Broadcast TV Video and Audio
+  - [Broadcast TV 101](broadcast_media/broadcast_media_101)
+  - [Broadcast TV Media Pixel Sizes](<broadcast_media/broadcast media_pixel_sizes>)
+  - [Broadcast TV Media Aspect Ratios - SD 576 line formats ('PAL' & 'SECAM')](broadcast_media/tv_aspect_ratios-576lines)
 - Video and Audio Media
   - [Codecs](media/codecs)
   - [Containers](media/containers)
   - [Formats](media/formats)
-  - Broadcast Video and Audio Media
-    - [Broadcast Media 101](broadcast_media/broadcast_media_101)
-    - [TV Aspect Ratios - SD 576 line formats ('PAL' & 'SECAM')](broadcast_media/tv_aspect_ratios-576lines)
-  - FFmpeg
+  - Encoding Media Files with FFmpeg
     - [Command line basics](FFmpeg/command_line_basics)
     - [Creating test signal files](FFmpeg/creating_test_signal_files)
     - [Creating silence](FFmpeg/creating_silence)
