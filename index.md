@@ -1,4 +1,4 @@
-#
+# 
 
 - [About me](about_me/)
 
@@ -31,7 +31,7 @@
   - [BTRFS](filesystems/btrfs)
   - [ZFS](filesystems/zfs)
   - [FAT](filesystems/fat)
-- Kubernetes
+- Kubernetes - K8s
   - [Installing a Highly Available K3s cluster](kubernetes/k3s/deploying_ha_cluster)
   - [Deploying a Highly Available ActiveMQ Classic cluster to Kubernetes](blog/2025/01/08/ActiveMQ_Kubernetes/)
   - [Highly Available K3s cluster datastore options](kubernetes/k3s/cluster_database_options)
@@ -43,5 +43,5 @@
 - Virtualisation
   - [Harvester](virtualisation/harvester/)
     - [Migrate an ESXi VM to Harvester](virtualisation/harvester/migrate_esxi_to_harvester)
-- VPN
+- Virtual Private Networks - VPN
   - [Web-Socket tunnel carrying WireGuard](VPN/wstunnel_wireguard)
