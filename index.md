@@ -11,8 +11,8 @@
 
 - Broadcast TV Video and Audio
   - [Broadcast TV 101](broadcast_media/broadcast_media_101)
-  - [Broadcast TV Media Pixel Sizes](<broadcast_media/broadcast media_pixel_sizes>)
-  - [Broadcast TV Media Aspect Ratios - SD 576 line formats ('PAL' & 'SECAM')](broadcast_media/tv_aspect_ratios-576lines)
+  - [Broadcast TV Media Pixel Sizes](broadcast_media/broadcast_media_pixel_sizes)
+  - [Broadcast TV SD Media Aspect Ratios](broadcast_media/broadcast_tv_SD_aspect_ratios)
 - Video and Audio Media
   - [Codecs](media/codecs)
   - [Containers](media/containers)
