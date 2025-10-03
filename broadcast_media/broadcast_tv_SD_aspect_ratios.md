@@ -24,47 +24,47 @@ To understand why, we have to look at some analogue TV and digital TV specificat
 
 In the analogue world of "PAL" TV there are 625 lines transmitted 25 times a second.
 
-A single line is $ \dfrac{1}{25\times 625} = 0.000,064 $ seconds, $ 64 $ micro-seconds, long.
+A single line is $ \dfrac{1}{25\times 625} = 0.000064 $ seconds, $ 64 $ micro-seconds, long.
 
 Which matches the "Nominal line period" of $ 64 \mu s $ in table 1-1 of [ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf).
 
 [ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf) table 1-1 also says the blanking period is $ 12 \mu s $.
 
-Which leaves 52 micro-seconds for *active picture*, the rest is sync-pulse and back & front porch.
+Which leaves $ 52 \mu s $ for *active picture*, the rest is sync-pulse and back & front porch.
 
 ### 525-line, $ \frac{60}{1.001} $ fields per second
 
 In the analogue world of "NTSC" there are 525 lines transmitted $ \frac{30}{1.001} $ times per second.
 
-A single line is $ \dfrac{1}{29.97\times525} = 0.000,063,\overline{5} $ seconds, $ 63.\overline{5} $ micro-seconds, long.
+A single line is $ \dfrac{1}{29.97\times525} = 0.000063,\overline{5} $ seconds, $ 63.\overline{5} $ micro-seconds, long.
 
 Which matches the "Nominal line period" of $ 63.5555 \mu s $ in table 1-1 of [ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf).
 
 [ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf) table 1-1 also says the blanking period is $ 10.9 \mu s $.
 
-Which leaves 52.6555 micro-seconds for *active picture*, the rest is sync-pulse and back & front porch.
+Which leaves $ 52.6555 \mu s $ for *active picture*, the rest is sync-pulse and back & front porch.
 
 ## Analogue to digital conversion
 
-For both 625 and 525 line systems, [ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf) says that analogue to digital conversion the luminance sampling frequency of 13.5 Mega-Hertz (MHz) would be used.
+For both 625 and 525 line systems analogue to digital conversion [ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf) says that the luminance sampling frequency is 13.5 Mega-Hertz (MHz).
 
 We can confirm line lengths sampled at 13.5MHz by calculating how many samples there would be per total line length.
 
-$ 13500000 \times 0.0000640 = 864 $ samples per total line for 625-line, 50 field per second systems.
+$ 13.5MHz \times 64 \mu s = 864 $ samples per total line for 625-line, 50 field per second systems.
 
-$ 13500000 \times 0.000063\overline{5} = 858 $ samples per total line for 625-line, 50 field per second systems.
+$ 13.5MHz \times 63.\overline{5} \mu s = 858 $ samples per total line for 525-line, $ \frac{60}{1.001} $ fields per second systems.
 
 Those values match table 4 of [ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf).
 
 To calculate the *active pixels* which correspond to the *active picture* of a line of video sampled at 13.5MHz:
 
-$ 13500000 \times 0.00005200 = 702 $ *active pixels* per line for "PAL"/"SECAM"
+$ 13.5MHz \times 52 \mu s = 702 $ *active pixels* per line for "PAL"/"SECAM"
 
-$ 13500000 \times 0.0000526\overline{5} = 710.84 $ *active pixels* per line for "NTSC"
+$ 13.5MHz \times 52.6\overline{5} \mu s = 710.84 $ *active pixels* per line for "NTSC"
 
-It was decided to encode 720 pixels per line, which means that when sampling "NTSC" and "PAL"/"SECAM" at 13.5MHz the whole active picture period could fit.
+[ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf) states that the analogue to digital converters for both 625 and 525 line systems would encode 720 pixels per line. This standardises the analogue to digital conversion systems, and means that the whole *active picture* of each line of both systems could fit, with some padding at each end of the line.
 
-## SD 576 line formats ("PAL" & "SECAM")
+## SD 576 line systems ("PAL" & "SECAM")
 
 With "PAL", the centre 702 pixels of the 720 encoded pixels per line are the *active pixels*, the rest - 9 pixels at the start and 9 pixels at the end, are parts of the analogue back-porch and front-porch and must be cropped and discarded when preserving the aspect ratio of the video.
 
@@ -74,35 +74,35 @@ The *active pixels* may contain either 4:3 or 16:9 video.
 
 ### SD 576 line 4:3
 
-To calculate the square-pixel width of a 4:3 576 line high video:
+To calculate the square-pixel width of a 4:3 576 line video:
 
 $ 576 \times \dfrac{4}{3} = 768 $ pixels wide.
 
-That means the centre 702 *active pixels* need to be scaled up to 768 pixels to make 4:3 video look square.
+That means the centre 702 *active pixels* need to be scaled up to 768 pixels to make square pixel 4:3.
 
 Applying the same scaling ratio to the full sampled 720 pixels of complete line means:
 
 $ \dfrac{720}{702} \times 576 \times \dfrac{4}{3} = 767.69 $ pixels wide.
 
-Rounding to the nearest whole even number, we must scale the full sampled 720 pixels up to 788 pixels to make full frame 4:3 look square (to within 0.02%).
+Rounding to the nearest whole even number, we must scale the full sampled 720 pixels up to 788 pixels to make full frame square pixel 4:3 (to within 0.02%).
 
 That gives the display aspect ratio of the full encoded 720x576 picture of **197:144**.
 
 ### SD 576 line 16:9
 
-To calculate the square-pixel width of a 16:9 576 line high video:
+To calculate the square-pixel width of a 16:9 576 line video:
 
 $ 576 \times \dfrac{16}{9} = 1024 $ pixels wide.
 
-That means the centre 702 *active pixels* need to be scaled up to 1024 pixels to make 16:9 video look square.
+That means the centre 702 *active pixels* need to be scaled up to 1024 pixels to make square pixel 16:9.
 
 Applying the same scaling ratio to the full sampled 720 pixels of complete line means:
 
 $ \dfrac{720}{702} \times 576 \times \dfrac{16}{9} = 1050.26 $ pixels wide.
 
-Rounding to the nearest whole even number, we must scale the 720 pixels up to 1050 pixels to make full frame 16:9 look square (to within 0.02%) .
+Rounding to the nearest whole even number, we must scale the 720 pixels up to 1050 pixels to make full frame square pixel 16:9(to within 0.02%) .
 
-But, for reasons of ease of encoding, we normally round to the nearest whole number devisable by 8, which is 1048 pixels wide (accurate to within 0.2%)
+But, for reasons of ease of encoding, we normally round to the nearest whole number divisible by 8, which is 1048 pixels wide (accurate to within 0.2%)
 
 That gives the display aspect ratio of the full encoded 720x576 picture of **131:72**.
 
@@ -121,14 +121,14 @@ Compare the three testcards:
 
 The picture area of both the 720x576 ("PAL") 4:3 SD (Testcard-J - top) and the 720x576 ("PAL") 16:9 SD (Testcard-W - middle) extends past the 4:3 and 16:9 lines.
 
-This is because the *active picture* (up to the outer chevron points) is the centre 702 pixels of the whole 720 pixel SD video line. The 'active' area is 4:3 or 16:9, the 'whole picture' area is wider than 4:3 or 16:9.
+This is because the *active picture* (up to the outer central diamond points) is the centre 702 pixels of the whole 720 pixel SD video line. The 'active' area is 4:3 or 16:9, the 'whole picture' area is wider than 4:3 or 16:9.
 
 ---
 **_IMPORTANT:_**
 
-When converting from SD video into HD video the edges past the 4:3 or 16:9 lines must be cropped and discarded. Only the centre 702 pixels of the 720 pixel SD video line must be used.
+When converting from SD video into square-pixel video the edges past the 4:3 or 16:9 lines must be cropped and discarded. Only the centre 702 pixels of the 720 pixel SD video line must be used.
 
-When converting from HD video into SD video the edges past the 4:3 or 16:9 lines must be added back. The HD video must fill the centre 702 pixels of the 720 pixel SD video line, the rest is usually filled with black.
+When converting from square-pixel video into SD video the edges past the 4:3 or 16:9 lines must be added back. The square-pixel video must fill the centre 702 pixels of the 720 pixel SD video line, the rest is usually filled with black.
 
 An approach when scaling 16:9 SD video is to maintain the (about) 131:72 display aspect ratio of the full line of the SD video, then crop the resulting video down to 16:9 discarding the left and right edges.
 
