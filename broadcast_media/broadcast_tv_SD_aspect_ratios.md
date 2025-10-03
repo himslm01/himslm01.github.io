@@ -62,7 +62,7 @@ $ 13.5MHz \times 52 \mu s = 702 $ *active pixels* per line for "PAL"/"SECAM"
 
 $ 13.5MHz \times 52.6\overline{5} \mu s = 710.84 $ *active pixels* per line for "NTSC"
 
-[ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf) states that the analogue to digital converters for both 625 and 525 line systems would encode 720 pixels per line. This standardises the analogue to digital conversion systems, and means that the whole *active picture* of each line of both systems could fit, with some padding at each end of the line.
+[ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf) states that the analogue to digital converters for both 625 and 525 line systems will encode 720 pixels per line. This standardises the analogue to digital conversion systems, and means that the whole *active picture* of each line of both systems could fit, with some padding at each end of the line.
 
 ## SD 576 line systems ("PAL" & "SECAM")
 
