@@ -100,7 +100,7 @@ Applying the same scaling ratio to the full sampled 720 pixels of complete line 
 
 $ \dfrac{720}{702} \times 576 \times \dfrac{16}{9} = 1050.26 $ pixels wide.
 
-Rounding to the nearest whole even number, we must scale the 720 pixels up to 1050 pixels to make full frame square pixel 16:9(to within 0.02%) .
+Rounding to the nearest whole even number, we must scale the 720 pixels up to 1050 pixels to make full frame square pixel 16:9 (to within 0.02%) .
 
 But, for reasons of ease of encoding, we normally round to the nearest whole number divisible by 8, which is 1048 pixels wide (accurate to within 0.2%)
 
@@ -136,17 +136,17 @@ An approach when scaling 16:9 SD video is to maintain the (about) 131:72 display
 
 "PAL" SD media starts as 576 lines of anamorphic pixels.
 
-$ 576 * \dfrac{16}{9} = 1024 $
+$ 576 \times \dfrac{16}{9} = 1024 $
 
-Therefore square pixel 16:9 "PAL" SD media 1024 x 576
+Therefore square pixel 16:9 "PAL" SD media 1024x576
 
 Scaling 16:9 SD media to square pixels you would scale 720x576 pixels to a display aspect ratio of 131:72.
 
-$ 720 * \dfrac{131}{72} = 1048 $
+$ 720 \times \dfrac{131}{72} = 1048 $
 
 Therefore you first scale 720 to 1048 and preserve the 576 lines.
 
-Now crop to the centre 1024 x 576 pixels from the 1048 x 576.
+Now crop to the centre 1024x576 pixels from the 1048x576.
 Start 12 pixels from the left, take 1024 pixels, and ignore the final 12 pixels on the right.
 
 ## References
