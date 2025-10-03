@@ -12,7 +12,13 @@
 
 # Broadcast TV - SD Aspect Ratios
 
-## Analog active line length
+All Standard Definition digital video broadcast video formats use anamorphic pixels. Be they 4:3 or 16:9 formats, be they 'PAL' or 'NTSC' formats, the pixels making up the image are anamorphic.
+
+Most broadcast Standard Definition formats have an active picture area that is not the same size as the encoded picture area. Be they 4:3 or 16:9 formats, be they 'PAL' or 'NTSC' formats, there are probably extra pixels on the left and right of of the active picture, and and possibly lines missing at the top or bottom of the picture.
+
+To understand why, we have to look at some analogue TV and digital TV specifications.
+
+## Analogue active line length
 
 ### 625-line, 50 fields per second
 
@@ -26,7 +32,7 @@ Which matches the "Nominal line period" of $ 64 \mu s $ in table 1-1 of [ITU-R B
 
 Which leaves 52 micro-seconds for *active picture*, the rest is sync-pulse and back & front porch.
 
-### 525-line, $ \frac{60}{1.001} $ fields per second 
+### 525-line, $ \frac{60}{1.001} $ fields per second
 
 In the analogue world of "NTSC" there are 525 lines transmitted $ \frac{30}{1.001} $ times per second.
 
@@ -38,7 +44,7 @@ Which matches the "Nominal line period" of $ 63.5555 \mu s $ in table 1-1 of [IT
 
 Which leaves 52.6555 micro-seconds for *active picture*, the rest is sync-pulse and back & front porch.
 
-## Analog to digital conversion
+## Analogue to digital conversion
 
 For both 625 and 525 line systems, [ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf) says that analogue to digital conversion the luminance sampling frequency of 13.5 Mega-Hertz (MHz) would be used.
 
@@ -63,6 +69,8 @@ It was decided to encode 720 pixels per line, which means that when sampling "NT
 With "PAL", the centre 702 pixels of the 720 encoded pixels per line are the *active pixels*, the rest - 9 pixels at the start and 9 pixels at the end, are parts of the analogue back-porch and front-porch and must be cropped and discarded when preserving the aspect ratio of the video.
 
 The *active pixels* may contain either 4:3 or 16:9 video.
+
+## Anamorphic pixels
 
 ### SD 576 line 4:3
 
