@@ -12,29 +12,51 @@
 
 # Broadcast TV - SD Aspect Ratios
 
-Refer to ITU-R BT.601-7 TABLE 4 and ITU-R BT.470-6
+## Analog active line length
+
+### 625-line, 50 fields per second
 
 In the analogue world of "PAL" TV there are 625 lines transmitted 25 times a second.
 
-A single line is $ 1 \over 25 * 625 $ = 64 microseconds long.
+A single line is $ \dfrac{1}{25\times 625} = 64 $ micro-seconds long.
 
-52 micro-seconds is active picture, the rest is sync-pulse and back & front porch.
+Which matches the "Nominal line period" of $ 64 \mu s $ in table 1-1 of [ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf).
 
-In the analogue world of "NTSC" there are 525 lines transmitted 30/1.001 times per second.
+[ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf) table 1-1 also says the blanking period is $ 12 \mu s $.
 
-A single line is $ 1 \over 29.97 * 525 $ = 63.55 microseconds long.
+Which leaves 52 micro-seconds for active picture, the rest is sync-pulse and back & front porch.
 
-52.65 microseconds is active picture, the rest is sync-pulse and back & front porch.
+### 525-line, $ \frac{60}{1.001} $ fields per second 
 
-When analogue video was converting to digital it was decided that a sample frequency of exactly 13.5 MHz would be used for "PAL"/"SECAM" 25 interlaced frames per second and also "NTSC" 30/1.001 frames per second.
+In the analogue world of "NTSC" there are 525 lines transmitted $ \frac{30}{1.001} $ times per second.
+
+A single line is $ \dfrac{1}{29.97\times525} = 63.\overline{5} $ micro-seconds long.
+
+Which matches the "Nominal line period" of $ 63.5555 \mu s $ in table 1-1 of [ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf).
+
+[ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf) table 1-1 also says the blanking period is $ 10.9 \mu s $.
+
+Which leaves 52.6555 micro-seconds for active picture, the rest is sync-pulse and back & front porch.
+
+## Analog to digital conversion
+
+For both 625 and 525 line systems, [ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf) says that analogue to digital conversion the luminance sampling frequency of 13.5 Mega-Hertz (MHz) would be used.
+
+We can confirm line length of 64 micro-seconds sampled at 13.5MHz by calculating how many samples per total line.
+
+$ 13500000 \times 0.0000640 = 864 $ samples per total line for 625-line, 50 field per second systems.
+
+$ 13500000 \times 0.000063\overline{5} = 858 $ samples per total line for 625-line, 50 field per second systems.
+
+Those values match table 4 of [ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf).
 
 To calculate the active picture of a line of video sampled at 13.5MHz:
 
-$ 13500000 * 0.00005200 $ = 702 samples of active picture per line for "PAL"/"SECAM"
+$ 13500000 \times 0.00005200 = 702 $ samples of active picture per line for "PAL"/"SECAM"
 
-$ 13500000 * 0.00005265 $ = 710.8 samples of active per line for "NTSC"
+$ 13500000 \times 0.0000526\overline{5} = 710.84 $ samples of active per line for "NTSC"
 
-It was decided to use 720 pixels per line, which means that when sampling "NTSC" and "PAL"/"SECAM" at 13.5MHz and the whole active line could fit.  
+It was decided to encode 720 pixels per line, which means that when sampling "NTSC" and "PAL"/"SECAM" at 13.5MHz and the whole active line could fit.  
 
 ## SD 576 line formats ("PAL" & "SECAM")
 
@@ -42,9 +64,9 @@ With "PAL", the centre 702 pixels of the 720 encoded pixels per line are the act
 
 The active pixels may contain either 4:3 or 16:9 video.
 
-Since $ 576 * 4 / 3 $ = 768 pixels, that means the 702 active pixels need to be scaled up to 768 pixels to make 4:3 video look square, and applying the same scaling ratio to the 720 pixels of complete line means we must scale the 720 pixels up to 788 pixels to make full frame 4:3 look square.
+Since $ 576 \times \dfrac{4}{3} = 768 $ pixels, that means the 702 active pixels need to be scaled up to 768 pixels to make 4:3 video look square, and applying the same scaling ratio to the 720 pixels of complete line means we must scale the 720 pixels up to 788 pixels to make full frame 4:3 look square.
 
-Also, since $ 576 * 16 / 9 $ = 1024 pixels, that means the 702 active pixels need to be scaled up to 1024 pixels to make 16:9 video look square, and applying the same scaling ratio to the 720 pixels of complete line means we must scale the 720 pixels up to 1048 pixels to make full frame 16:9 look square.
+Also, since $ 576 \times \dfrac{16}{9} = 1024 $ pixels, that means the 702 active pixels need to be scaled up to 1024 pixels to make 16:9 video look square, and applying the same scaling ratio to the 720 pixels of complete line means we must scale the 720 pixels up to 1048 pixels to make full frame 16:9 look square.
 
 Compare the three testcards:
 
@@ -74,15 +96,21 @@ An approach when scaling 16:9 SD video is to maintain the (about) 131:72 display
 
 "PAL" SD media starts as 576 lines of anamorphic pixels.
 
-$ 576 * 16 / 9 $ = 1024
+$ 576 * \dfrac{16}{9} = 1024 $
 
 Therefore square pixel 16:9 "PAL" SD media 1024 x 576
 
 Scaling 16:9 SD media to square pixels you would scale 720x576 pixels to a display aspect ratio of 131:72.
 
-$ 720 * 131 / 72 $ = 1048
+$ 720 * \dfrac{131}{72} = 1048 $
 
 Therefore you first scale 720 to 1048 and preserve the 576 lines.
 
 Now crop to the centre 1024 x 576 pixels from the 1048 x 576.
 Start 12 pixels from the left, take 1024 pixels, and ignore the final 12 pixels on the right.
+
+## References
+
+* [ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf) Conventional Television Systems
+* [ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf) Studio encoding parameters of digital
+television for standard 4:3 and wide-screen 16:9 aspect ratios
