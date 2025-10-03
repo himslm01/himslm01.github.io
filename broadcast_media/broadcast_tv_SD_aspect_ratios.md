@@ -24,7 +24,7 @@ To understand why, we have to look at some analogue TV and digital TV specificat
 
 In the analogue world of "PAL" TV there are 625 lines transmitted 25 times a second.
 
-A single line is $ \dfrac{1}{25\times 625} = 0.000064 $ seconds, $ 64 $ micro-seconds, long.
+A single line is $ \dfrac{1}{25\times 625} = 0.000064 $ seconds, $ 64 $ micro-seconds ($ \mu s $), long.
 
 Which matches the "Nominal line period" of $ 64 \mu s $ in table 1-1 of [ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf).
 
@@ -36,7 +36,7 @@ Which leaves $ 52 \mu s $ for *active picture*, the rest is sync-pulse and back 
 
 In the analogue world of "NTSC" there are 525 lines transmitted $ \frac{30}{1.001} $ times per second.
 
-A single line is $ \dfrac{1}{29.97\times525} = 0.000063\overline{5} $ seconds, $ 63.\overline{5} $ micro-seconds, long.
+A single line is $ \dfrac{1}{29.97\times525} = 0.000063\overline{5} $ seconds, $ 63.\overline{5} \mu s $, long.
 
 Which matches the "Nominal line period" of $ 63.5555 \mu s $ in table 1-1 of [ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf).
 
