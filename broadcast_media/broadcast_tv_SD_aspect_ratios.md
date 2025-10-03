@@ -56,7 +56,7 @@ $ 13.5MHz \times 63.\overline{5} \mu s = 858 $ samples per total line for 525-li
 
 Those values match table 4 of [ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf).
 
-To calculate the *active pixels* which correspond to the *active picture* of a line of video sampled at 13.5MHz:
+To calculate the *active pixels* which correspond to the *active picture* of a line of video we calculated above, sampled at 13.5MHz:
 
 $ 13.5MHz \times 52 \mu s = 702 $ *active pixels* per line for "PAL"/"SECAM"
 
