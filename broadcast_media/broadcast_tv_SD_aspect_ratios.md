@@ -56,7 +56,7 @@ $ 13500000 \times 0.00005200 = 702 $ samples of active picture per line for "PAL
 
 $ 13500000 \times 0.0000526\overline{5} = 710.84 $ samples of active per line for "NTSC"
 
-It was decided to encode 720 pixels per line, which means that when sampling "NTSC" and "PAL"/"SECAM" at 13.5MHz and the whole active line could fit.  
+It was decided to encode 720 pixels per line, which means that when sampling "NTSC" and "PAL"/"SECAM" at 13.5MHz the whole active picture period could fit.
 
 ## SD 576 line formats ("PAL" & "SECAM")
 
