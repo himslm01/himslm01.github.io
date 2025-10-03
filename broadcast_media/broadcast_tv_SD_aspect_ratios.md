@@ -48,7 +48,7 @@ Which leaves 52.6555 micro-seconds for *active picture*, the rest is sync-pulse 
 
 For both 625 and 525 line systems, [ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf) says that analogue to digital conversion the luminance sampling frequency of 13.5 Mega-Hertz (MHz) would be used.
 
-We can confirm line length of 64 micro-seconds sampled at 13.5MHz by calculating how many samples per total line.
+We can confirm line lengths sampled at 13.5MHz by calculating how many samples there would be per total line length.
 
 $ 13500000 \times 0.0000640 = 864 $ samples per total line for 625-line, 50 field per second systems.
 
