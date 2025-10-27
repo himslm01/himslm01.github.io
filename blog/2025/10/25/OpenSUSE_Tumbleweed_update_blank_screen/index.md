@@ -18,10 +18,12 @@ The other machine did have the splash screen, and it just kept the spinner spinn
 
 I could roll back both machines to a point before the `zypper dup` by selecting the `Start bootloader from a read-only snapshot`
 
-![OpenSUSE](boot_screen.png)
+![OpenSUSE boot selection](boot_screen.png)
 
 From the list of options select, by date/time, the `pre zypper` snapshot from when you started the `zypper dup` which stopped the machine from booting.
 It may not be the most recent `pre zypper` snapshot, because some install completion often happens at boot time.
+
+![OpenSUSE boot snapshot selection](boot_snapshot_selection.png)
 
 Once you are back at a state where the graphical login prompt, log in and as the `root` user run `snapper rollback` then `reboot`.
 
