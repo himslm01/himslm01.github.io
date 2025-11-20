@@ -158,7 +158,5 @@ television for standard 4:3 and wide-screen 16:9 aspect ratios" is the industry 
 * In the past [Adobe](https://www.adobe.com/) realised they they'd been getting the aspect ration of Standard Definition media wrong. They published a page describing how they got it wrong all the way up before After Effects CS4. The page was deleted from Adobe's site in 2019 but remains available at [The Internet Archive](https://web.archive.org/web/20161009062035/http://help.adobe.com/en_US/AfterEffects/9.0/WS3878526689cb91655866c1103906c6dea-7f3aa.html).
 * [Mike Afford](https://www.mikeafford.com/) wrote a blog post in 2009 describing the differences between Adobe After Effects CS3 and CS4 after Adobe fixed their Standard Definition aspect ratio issue [PAL D1/DV Widescreen square pixel settings in After Effects (CS4 vs CS3)](https://www.mikeafford.com/blog/pal-d1-dv-widescreen-square-pixel-settings-in-after-effects-cs4-vs-cs3/).
 
-[ITU-R BT.470-6]: <https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf> "Conventional Television Systems"
-
-[ITU-R BT.601-7]: <https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf> "Studio encoding parameters of digital
-television for standard 4:3 and wide-screen 16:9 aspect ratios"
+[ITU-R BT.470-6]: <https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf>
+[ITU-R BT.601-7]: <https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf>
