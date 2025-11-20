@@ -10,15 +10,15 @@ Exactly what aspect ration the pixels are, or what aspect ratio the full video s
 
 Depending on the age and origin of the media the first half of the first line of active picture and the last half of the last line may contain black video.
 
-|width|height|notes|
-|---|---|---|
-|720|608|4:3 or 16:9 25fps media.<br/>The top 32 lines contain Vertical Blanking Information and should be cropped and discarded.<br/>[The centre 702x576 of the remaining pixels contain the active picture](broadcast_tv_SD_aspect_ratios).|
-|720|576|4:3 or 16:9 25fps media.<br/>[The centre 702x576 pixels contain the active picture](broadcast_tv_SD_aspect_ratios).|
-|704|576|4:3 or 16:9 25fps media.<br/>Assumed that all pixels are active. Often this media will have been HD down-converted to SD for digital emission.|
-|544|576|4:3 or 16:9 25fps media.<br/>720x576 squeezed by roughly ¾ where the result rounds to the nearest 16. Used in "lower cost" digital TV channels.<br/>[The centre 530x576 pixels contain active picture](broadcast_tv_SD_aspect_ratios).|
-|720|512|4:3 or 16:9 29.97fps media.<br/>The top 26 lines contain Vertical Blanking Information and should be cropped.<br/>[The centre 712x486 of the remaining pixels contain the active picture](broadcast_tv_SD_aspect_ratios).|
-|720|486|4:3 or 16:9 29.97fps media.<br/>[The centre 712x486 pixels contain the active picture](broadcast_tv_SD_aspect_ratios).|
-|720|480|4:3 or 16:9 29.97fps DVD media.<br/>This gets complicated, because the top 3 lines and bottom 3 lines have been cropped when converting TV to DVD.|
+|width|height|fps|notes|
+|---|---|---|---|
+|720|608|25|4:3 or 16:9 media.<br/>The top 32 lines contain Vertical Blanking Information and should be cropped and discarded.<br/>[The centre 702x576 of the remaining pixels contain the active picture](broadcast_tv_SD_aspect_ratios).|
+|720|576|25|4:3 or 16:9 media.<br/>[The centre 702x576 pixels contain the active picture](broadcast_tv_SD_aspect_ratios).|
+|704|576|25|4:3 or 16:9 media.<br/>Assumed that all pixels are active. Often this media will have been HD down-converted to SD for digital emission.|
+|544|576|25|4:3 or 16:9 media.<br/>720x576 squeezed by roughly ¾ where the result rounds to the nearest 16. Used in "lower cost" digital TV channels.<br/>[The centre 530x576 pixels contain active picture](broadcast_tv_SD_aspect_ratios).|
+|720|512|30/1.001|4:3 or 16:9 media.<br/>The top 26 lines contain Vertical Blanking Information and should be cropped.<br/>[The centre 712x486 of the remaining pixels contain the active picture](broadcast_tv_SD_aspect_ratios).|
+|720|486|30/1.001|4:3 or 16:9 media.<br/>[The centre 712x486 pixels contain the active picture](broadcast_tv_SD_aspect_ratios).|
+|720|480|30/1.001|4:3 or 16:9 DVD media.<br/>This gets complicated, because the top 3 lines and bottom 3 lines have been cropped when converting TV to DVD.|
 
 ## High Definition
 
