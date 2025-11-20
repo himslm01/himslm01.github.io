@@ -26,9 +26,9 @@ In the analogue world of "PAL" TV there are 625 lines transmitted 25 times a sec
 
 A single line is $ \dfrac{1}{25\times 625} = 0.000064 $ seconds, $ 64 $ micro-seconds ($ \mu s $), long.
 
-Which matches the "Nominal line period" of $ 64 \mu s $ in table 1-1 of [ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf).
+Which matches the "Nominal line period" of $ 64 \mu s $ in table 1-1 of [ITU-R BT.470-6][ITU-R BT.470-6].
 
-[ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf) table 1-1 also says the blanking period is $ 12 \mu s $.
+[ITU-R BT.470-6][ITU-R BT.470-6] table 1-1 also says the blanking period is $ 12 \mu s $.
 
 Which leaves $ 52 \mu s $ for *active picture*, the rest is sync-pulse and back & front porch.
 
@@ -38,23 +38,23 @@ In the analogue world of "NTSC" there are 525 lines transmitted $ \frac{30}{1.00
 
 A single line is $ \dfrac{1}{29.97\times525} = 0.000063\overline{5} $ seconds, $ 63.\overline{5} \mu s $, long.
 
-Which matches the "Nominal line period" of $ 63.5555 \mu s $ in table 1-1 of [ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf).
+Which matches the "Nominal line period" of $ 63.5555 \mu s $ in table 1-1 of [ITU-R BT.470-6][ITU-R BT.470-6].
 
-[ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf) table 1-1 also says the blanking period is $ 10.9 \mu s $.
+[ITU-R BT.470-6][ITU-R BT.470-6] table 1-1 also says the blanking period is $ 10.9 \mu s $.
 
 Which leaves $ 52.6555 \mu s $ for *active picture*, the rest is sync-pulse and back & front porch.
 
 ## Analogue to digital conversion
 
-For both 625 and 525 line systems analogue to digital conversion [ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf) says that the luminance sampling frequency is 13.5 Mega-Hertz (MHz).
+For both 625 and 525 line systems analogue to digital conversion [ITU-R BT.601-7][ITU-R BT.601-7] says that the luminance sampling frequency is 13.5 Mega-Hertz (MHz).
 
 We can confirm line lengths sampled at 13.5MHz by calculating how many samples there would be per total line length.
 
 $ 13.5MHz \times 64 \mu s = 864 $ samples per total line for 625-line, 50 field per second systems.
 
-$ 13.5MHz \times 63.\overline{5} \mu s = 858 $ samples per total line for 525-line, $ \frac{60}{1.001} $ fields per second systems.
+$ 13.5MHz \times 63.\overline{5} \mu s = 858 $ samples per total line for 525-line, $ \frac{60}{1.001} $ field per second systems.
 
-Those values match table 4 of [ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf).
+Those values match table 4 of [ITU-R BT.601-7][ITU-R BT.601-7]
 
 To calculate the *active pixels* which correspond to the *active picture* of a line of video we calculated above, sampled at 13.5MHz:
 
@@ -62,7 +62,7 @@ $ 13.5MHz \times 52 \mu s = 702 $ *active pixels* per line for "PAL"/"SECAM"
 
 $ 13.5MHz \times 52.6\overline{5} \mu s = 710.84 $ *active pixels* per line for "NTSC"
 
-[ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf) states that the analogue to digital converters for both 625 and 525 line systems will encode 720 pixels per line. This standardises the analogue to digital conversion systems, and means that the whole *active picture* of each line of both systems could fit, with some padding at each end of the line.
+[ITU-R BT.601-7][ITU-R BT.601-7] states that the analogue to digital converters for both 625 and 525 line systems will encode 720 pixels per line. This standardises the analogue to digital conversion systems, and means that the whole *active picture* of each line of both systems could fit, with some padding at each end of the line.
 
 ## SD 576 line systems ("PAL" & "SECAM")
 
@@ -86,7 +86,7 @@ $ \dfrac{720}{702} \times 576 \times \dfrac{4}{3} = 767.69 $ pixels wide.
 
 Rounding to the nearest whole even number, we must scale the full sampled 720 pixels up to 788 pixels to make full frame square pixel 4:3 (to within 0.02%).
 
-That gives the display aspect ratio of the full encoded 720x576 picture of **197:144**.
+That results in the display aspect ratio of the full encoded "4:3" 720x576 picture being **197:144**.
 
 ### SD 576 line 16:9
 
@@ -104,15 +104,15 @@ Rounding to the nearest whole even number, we must scale the 720 pixels up to 10
 
 But, for reasons of ease of encoding, we normally round to the nearest whole number divisible by 8, which is 1048 pixels wide (accurate to within 0.2%)
 
-That gives the display aspect ratio of the full encoded 720x576 picture of **131:72**.
+That results in the display aspect ratio of the full encoded "16:9" 720x576 picture being **131:72**.
 
 ## Crop edges demonstration with BBC testcards
 
 Compare the three testcards:
 
-* 720x576 ("PAL") 4:3 SD (Testcard-J - top)
-* 720x576 ("PAL") 16:9 SD (Testcard-W - middle)
-* 1920x1080 16:9 (Testcard-HD - bottom).
+* 720x576 ("PAL") 4:3 SD - Testcard-J - top
+* 720x576 ("PAL") 16:9 SD - Testcard-W - middle
+* 1920x1080 16:9 - Testcard-HD - bottom
 
 ![three testcards with aspect ratio markings](assets/Testcard-J_W_HD-smaller.png)
 
@@ -151,9 +151,13 @@ Start 12 pixels from the left, take 1024 pixels, and ignore the final 12 pixels 
 
 ## References
 
-* [ITU-R BT.470-6](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf) "Conventional Television Systems" is the industry guide to analogue Standard Definition video.
-* [ITU-R BT.601-7](https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf) "Studio encoding parameters of digital
+* [ITU-R BT.470-6][ITU-R BT.470-6] "Conventional Television Systems" is the industry guide to analogue Standard Definition video.
+* [ITU-R BT.601-7][ITU-R BT.601-7] "Studio encoding parameters of digital
 television for standard 4:3 and wide-screen 16:9 aspect ratios" is the industry guide to digitizing analogue Standard Definition video.
 * In the past the [BBC](https://www.bbc.co.uk/) published its TV commissioning guidelines, which included a page summarising the information above. The page was deleted from the BBC site in 2011 but remains available at [The Internet Archive](http://replay.waybackmachine.org/20100826080627/www.bbc.co.uk/commissioning/tvbranding/picturesize.shtml).
 * In the past [Adobe](https://www.adobe.com/) realised they they'd been getting the aspect ration of Standard Definition media wrong. They published a page describing how they got it wrong all the way up before After Effects CS4. The page was deleted from Adobe's site in 2019 but remains available at [The Internet Archive](https://web.archive.org/web/20161009062035/http://help.adobe.com/en_US/AfterEffects/9.0/WS3878526689cb91655866c1103906c6dea-7f3aa.html).
 * [Mike Afford](https://www.mikeafford.com/) wrote a blog post in 2009 describing the differences between Adobe After Effects CS3 and CS4 after Adobe fixed their Standard Definition aspect ratio issue [PAL D1/DV Widescreen square pixel settings in After Effects (CS4 vs CS3)](https://www.mikeafford.com/blog/pal-d1-dv-widescreen-square-pixel-settings-in-after-effects-cs4-vs-cs3/).
+
+[ITU-R BT.470-6]: https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.470-6-199811-s!!pdf-e.pdf "Conventional Television Systems"
+[ITU-R BT.601-7]: https://www.itu.int/dms_pubrec/itu-r/rec/bt/r-rec-bt.601-7-201103-i!!pdf-e.pdf "Studio encoding parameters of digital
+television for standard 4:3 and wide-screen 16:9 aspect ratios"
