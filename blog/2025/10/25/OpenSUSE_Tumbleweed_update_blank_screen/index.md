@@ -37,9 +37,15 @@ One fix is to remove or rename `/etc/nsswitch.conf`, so that the fall-back `/usr
 mv /etc/nsswitch.conf /etc/nsswitch.conf.back
 ```
 
+I also copied the fall-back `/usr/etc/nsswitch.conf` back into `/et` so I would not be confused in the future.
+
+```console
+cp -a /usr/etc/nsswitch.conf /etc/nsswitch.conf
+```
+
 This should work unless your `/etc/nsswitch.conf` has been altered, for instance if you use LDAP for user authentication.
 
-If that is the case another fix is to patch the changes in the fall-back `/usr/etc/nsswitch.conf` into your `/etc/nsswitch.conf`.
+If that is the case then the fix is to patch the changes in the fall-back `/usr/etc/nsswitch.conf` into your `/etc/nsswitch.conf`.
 
 The patching will probably end up being to add 'systemd' to the modules available for the `passwd`, `group` and `shadow` lookups in `/etc/nsswitch.conf`.
 
@@ -59,5 +65,8 @@ The `/etc/nsswitch.conf` does not include checking for "dynamic users" created b
 
 ## References
 
-* [A post on OpenSUSE forums](https://forums.opensuse.org/t/after-zypper-dup-tw-not-booting-blinking-cursor-black-screen-of-death/188378)
-* [The bug ticket on OpenSUSE bugzilla](https://bugzilla.opensuse.org/show_bug.cgi?id=1250513)
+* [A post on OpenSUSE forums][OpenSUSE Form]
+* [The bug ticket on OpenSUSE bugzilla][OpenSUSE bugzilla]
+
+[OpenSUSE Form]: <https://forums.opensuse.org/t/after-zypper-dup-tw-not-booting-blinking-cursor-black-screen-of-death/188378>
+[OpenSUSE bugzilla]: <https://bugzilla.opensuse.org/show_bug.cgi?id=1250513>
