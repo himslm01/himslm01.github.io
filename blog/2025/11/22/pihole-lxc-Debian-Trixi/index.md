@@ -30,9 +30,9 @@ Use the Debian 13 template.
 
 8GB of disk, 2 cores of CPU, 512 MB memory is fine.
 
-Since PiHole is a service I recommend allocating a static IPv4 and IPv6 (it's 2025, you do have IPv6, yes?) address, but a static DHCP address is also a possibility.
+Pi-Hole is a service. I recommend allocating a static IPv4 and IPv6 (it's 2025, you do have IPv6, yes?) address to services, but a static DHCP address is also a possibility.
 
-Set the next DNS server for the LXC, although this can be overridden later in PiHole.
+Set the next DNS server for the LXC. The up-stream DNS servers for Pi-Hole will be set later during Pi-Hole's installation.
 
 ## Update the LXC base packages
 
@@ -45,7 +45,8 @@ Update Debian's base packages:
 
 ```console
 apt update && \
-apt -y full-upgrade && reboot
+apt -y full-upgrade && \
+reboot
 ```
 
 ## Install Pi-Hole
@@ -55,8 +56,8 @@ Login at the console command-line again.
 Install Pi-Hole using their provided install script.
 
 ```console
-apt install -y curl \
-&& curl -sSL https://install.pi-hole.net | bash
+apt install -y curl && \
+curl -sSL https://install.pi-hole.net | bash
 ```
 
 Note: it's your server running on your network, you need to be happy to run the script from the Internet.
@@ -86,7 +87,8 @@ After the installation is complete you will be presented with some admin access 
 ![Pi-Hole admin details](Pi-Hole-admin-details.png)
 
 You can use the provided password, write it down - it won't be presented again.
-I suggest instead you can the password yourself at the console command-line using the `pihole setpassword` command.
+
+But instead I suggest set the password yourself at the console command-line, using the `pihole setpassword` command.
 
 ```console
 root@pihole:~# pihole setpassword
@@ -95,7 +97,7 @@ Confirm Password:
   [✓] New password set
 ```
 
-Still on the console command-line using the `pihole -g` command to update the databases of hosts to block.
+Still on the console command-line, use the `pihole -g` command to update the databases of hosts to block.
 
 ```console
 root@pihole:~# pihole -g
@@ -128,10 +130,9 @@ root@pihole:~# pihole -g
   [✓] Done.
 ```
 
-Now you can go to the admin dashboard web interface at the URL given above, login with the password you have set, and start to investigate.
+Now you can go to the admin dashboard web interface at the URL given above, login with the password you were given or set, and start to investigate.
 
 ![Pi-Hole dashboard](Pi-Hole-dashboard.png)
-
 
 ## Update Pi-Hole
 
