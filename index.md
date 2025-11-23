@@ -1,10 +1,11 @@
-# Mark Himsley
+# Contents
 
 - [About me](about_me/)
 
 ## Blog Posts
 
-- [2025-10-25 OpenSUSE Tumbleweed update causes blank login screen](blog/2025/10/25/OpenSUSE_Tumbleweed_update_blank_screen/index.md)
+- [2025-11-22 Install Pi-Hole in Proxmox LXC of Debian Trixi](blog/2025/11/22/pihole-lxc-Debian-Trixi/)
+- [2025-10-25 OpenSUSE Tumbleweed update causes blank login screen](blog/2025/10/25/OpenSUSE_Tumbleweed_update_blank_screen/)
 - [2025-01-08 Deploying a Highly Available ActiveMQ Classic cluster to Kubernetes](blog/2025/01/08/ActiveMQ_Kubernetes/)
 - [2023-10-15 UTF-8 Character Encoding in Java on Windows](blog/2023/10/15/Java_utf8_character_encoding_windows/)
 
