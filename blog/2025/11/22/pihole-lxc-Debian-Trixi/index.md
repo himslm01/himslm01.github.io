@@ -34,6 +34,10 @@ Pi-Hole is a service. I recommend allocating a static IPv4 and IPv6 (it's 2025, 
 
 Set the next DNS server for the LXC. The up-stream DNS servers for Pi-Hole will be set later during Pi-Hole's installation.
 
+After the LXC has been created, I also needed to change the options for the console mode to `shell` in order to reliably access the console.
+
+![Change LXC setting console mode to `shell`](changeLXC-console-mode-shell.png)
+
 ## Update the LXC base packages
 
 Start the Pi-Hole LXC from Proxmox.
