@@ -84,8 +84,8 @@ ffmpeg -i <INPUT_FILE_720x608>
 Sony use the term **XAVC** to describe a variety of media formats.
 
 * XAVC - [H.264](codecs#mpeg-4-part-10) compressed video and [PCM](codecs#pcm) audio in an [MXF](containers#mxf) file container
-  * XAVC-I - I-frame only video encoding, very high bitrate, and usually very high quality
-  * XAVC-L - Long-GOP video encoding, lower bitrate and harder for software to decode
+  * XAVC Intra / XAVC-I - I-frame only video encoding, very high bitrate, and usually very high quality
+  * XAVC Long / XAVC-L - Long-GOP video encoding, lower bitrate and harder for software to decode
 * XAVC H - [H.265](codecs#mpeg-h-part-2) compressed video and [PCM](codecs#pcm) audio in an [MXF](containers#mxf) file container
 * XAVC S - Semi-pro [H.264](codecs#mpeg-4-part-10) compressed video and [PCM](codecs#pcm) or [AAC](codecs#mpeg-4-part-3) compressed audio in a [MP4](containers#mp4) file container
   * XAVC S-I - similar to XAVC-I
