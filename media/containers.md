@@ -9,13 +9,34 @@ A basic media container could combine a video stream and and audio stream into a
 
 ## AVI
 
+* extension: `.avi`
+* mime-type: `video/x-msvideo`
+
+Audio Video Interleave
+
+## Matroska
+
+* extension: `.mkv`
+* mime-type: `video/x-matroska`
+
 ## QuickTime MOV
+
+* extension: `.qt` `.mov`
+* mime-type: `video/quicktime`
 
 [QuickTime documentation at Apple](https://developer.apple.com/library/mac/documentation/quicktime/QTFF/qtff.pdf)
 
 ## MP4
 
+* extension: `.mp4` `.mp4v` `.mpg4`
+* mime-type: `video/mp4webm`
+
+Essentially QuickTime using a subset of the available options.
+
 ## MXF
+
+* extension: `.mxf`
+* mime-type: `application/mxf`
 
 Material Exchange Format is used widely throughout broadcast, including in the IMX family of files, in DPP AS-11 files, and in IMF.
 
@@ -28,3 +49,15 @@ To quote [http://www.amwa.tv/projects/AS-11.shtml](http://www.amwa.tv/projects/A
 > AS-11 Files are intended to be complete and ready for playout. AS-11 support playout while the file transfer is in progress, a workflow is referred to as “late delivery”. It is preferable for AS-11 files to be used by playout servers directly without rewrapping of the MXF data structures. The content may be delivered at the ultimate bit-rate, picture format and aspect ratio, or it may be transcoded at the broadcast station to the required bit-rates and formats.
 
 ## WAV
+
+* extension: `.wav`
+* mime-type: `audio/wav` `audio/vnd.wav`
+
+## WebM
+
+* extension: `.webm`
+* mime-type: `video/webm`
+
+Essentially MKV using a subset of the available options.
+
+[WebM at Wikipedia](https://en.wikipedia.org/wiki/WebM)
