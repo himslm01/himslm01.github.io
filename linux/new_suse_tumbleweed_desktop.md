@@ -1,5 +1,38 @@
 # Install a new OpenSuse Tumbleweed desktop
 
+## tweek Linux boot
+
+```console
+sudo vim /etc/default/grub
+```
+
+remove `splash=silent` and `quiet` from `GRUB_CMDLINE_LINUX_DEFAULT`
+
+from
+
+```text
+GRUB_CMDLINE_LINUX_DEFAULT="splash=silent mitigations=auto quiet security=apparmor nosimplefb=1"
+```
+
+to
+
+```text
+GRUB_CMDLINE_LINUX_DEFAULT="mitigations=auto security=apparmor nosimplefb=1"
+```
+
+then update the boot-loader, and reboot
+
+```console
+sudo update-bootloader --refresh
+sudo systemctl reboot
+```
+
+check the Linux command line
+
+```console
+cat /proc/cmdline
+```
+
 ## Install Gnome extensions
 
 * `Dock to Dash`
