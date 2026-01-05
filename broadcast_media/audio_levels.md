@@ -28,8 +28,8 @@
 ## Audio level reduction
 
 * -6dB = $ 1 \over 2 $ original level
-* -12dB` = $ 1 \over 4 $ original level
-* -18dB` = $ 1 \over 8 $ original level
+* -12dB = $ 1 \over 4 $ original level
+* -18dB = $ 1 \over 8 $ original level
 * -24dB = $ 1 \over 16 $ original level
 * -30dB = $ 1 \over 32 $ original level
 * -36dB = $ 1 \over 64 $ original level
