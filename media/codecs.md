@@ -8,6 +8,14 @@ Often the compression is lossy, which can cause fidelity of the video image or a
 
 ## AV1
 
+**A**lliance for Open Media **V**ideo **1**.
+
+Also known **AOMedia** (**A**lliance for **O**pen **Media**).
+
+Successor to [VP9](#vp9).
+
+An open-source encoder is [dav1d](https://images.videolan.org/projects/dav1d.html).
+
 [AV1 on Wikipedia](https://en.wikipedia.org/wiki/AV1)
 
 ## MPEG-1 Part 1 Layer 2
@@ -338,3 +346,5 @@ VP9 is mostly known as a web-streaming CODEC, used in Google's YouTube web site 
 There have been suggestions that VP9 may be in the next Blu-ray standard.
 
 [VP9 at Wikipedia](http://en.wikipedia.org/wiki/VP9)
+
+[FFmpeg docs on encoding with VP9](https://trac.ffmpeg.org/wiki/Encode/VP9)
