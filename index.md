@@ -4,6 +4,7 @@
 
 ## Blog Posts
 
+- [2026-07-10 SSH onto an old server](blog/2026/07/10/ssh_onto_old_server/index.md)
 - [2026-06-22 Setting up OpenSUSE Tumbleweed desktop](blog/2026/06/22/settining_up_opensuse_tumbleweed_desktop/)
 - [2026-02-09 Converting Seestar S50 .mp4 video for use in AstroSurface](blog/2026/02/09/converting_mp4_to_avi)
 - [2025-11-22 Install Pi-Hole in Proxmox LXC of Debian Trixi](blog/2025/11/22/pihole-lxc-Debian-Trixi/)
