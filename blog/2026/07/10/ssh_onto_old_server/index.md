@@ -13,7 +13,7 @@ The problem I'm trying to fix is that my desktop `ssh` client refuses to connect
 
 ```console
 $ ssh device
-Unable to negotiate with 10.64.0.6 port 22: no matching key exchange method found.
+Unable to negotiate with 10.11.12.13 port 22: no matching key exchange method found.
 Their offer: diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1
 ```
 
@@ -30,7 +30,7 @@ Host device
 I needed to add some configuration lines to change the options for this specific device:
 
 1. tell my `ssh` client to add the `diffie-hellman-group1-sha1` key exchange algorithm to this host
-2. tell my `ssh` client which cihpers to use for this host
+2. tell my `ssh` client which ciphers to use for this host
 3. tell my `ssh` client the minimum RSA key size to use for this host
 
 ```text
