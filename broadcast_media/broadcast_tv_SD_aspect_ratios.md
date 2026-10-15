@@ -82,7 +82,7 @@ That means the centre 702 *active pixels* need to be scaled up to 768 pixels to 
 
 Applying the same scaling ratio to the full sampled 720 pixels of complete line means:
 
-$ \dfrac{720}{702} \times 576 \times \dfrac{4}{3} = 767.69 $ pixels wide.
+$ \dfrac{720}{702} \times 576 \times \dfrac{4}{3} = 787.69 $ pixels wide.
 
 Rounding to the nearest whole even number, we must scale the full sampled 720 pixels up to 788 pixels to make full frame square pixel 4:3 (to within 0.02%).
 
